@@ -335,6 +335,94 @@
   .sp-stat .l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
 
   /* ═══════════════════════════════════
+     TAB 4 — AUCTION PREP
+  ═══════════════════════════════════ */
+  .ap-budget-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px 28px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .ap-bstat { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; text-align: center; }
+  .ap-bstat .v { font-size: 26px; font-weight: 800; line-height: 1; margin-bottom: 3px; }
+  .ap-bstat .l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .ap-budget-track { padding: 0 28px 10px; background: var(--surface); }
+  .ap-budget-track-bg { height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .ap-budget-track-fill { height: 100%; border-radius: 4px; transition: width 0.4s, background 0.3s; }
+
+  .ap-main { display: grid; grid-template-columns: 1fr 300px 270px; min-height: 700px; }
+  .ap-left   { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; border-right: 1px solid var(--border); overflow-y: auto; }
+  .ap-center { padding: 20px; display: flex; flex-direction: column; gap: 14px; border-right: 1px solid var(--border); }
+  .ap-right  { padding: 20px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; max-height: 88vh; position: sticky; top: 0; }
+
+  .ap-targets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ap-target-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; }
+  .ap-target-card:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .ap-target-card.tier-priority { border-left: 3px solid var(--accent); }
+  .ap-target-card.tier-value    { border-left: 3px solid var(--green); }
+  .ap-target-card.tier-lottery  { border-left: 3px solid var(--gold); }
+  .ap-target-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .ap-target-name { font-size: 13px; font-weight: 700; }
+  .ap-target-bid  { font-size: 14px; font-weight: 800; color: var(--gold); }
+  .ap-target-reason { font-size: 11px; color: var(--muted); line-height: 1.4; margin-top: 4px; }
+  .ap-tier-badge { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 4px; margin-bottom: 5px; display: inline-block; }
+  .badge-priority { background: rgba(79,142,247,0.15);  color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+  .badge-value    { background: rgba(34,197,94,0.12);   color: var(--green);  border: 1px solid rgba(34,197,94,0.25); }
+  .badge-lottery  { background: rgba(247,201,72,0.12);  color: var(--gold);   border: 1px solid rgba(247,201,72,0.25); }
+
+  .ap-nom-card   { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; border-left: 3px solid var(--red); }
+  .ap-nom-target { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--red); margin-bottom: 3px; }
+  .ap-nom-who    { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .ap-nom-reason { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  .ap-log-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--surface2); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 6px; }
+
+  .ap-rival-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .ap-rival-row:last-child { border-bottom: none; }
+  .ap-rival-row.is-us { background: rgba(79,142,247,0.05); border-radius: 8px; padding: 10px 8px; margin: 0 -8px; }
+
+  .ap-form   { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--surface2); border-radius: 10px; border: 1px solid var(--border); }
+  .ap-input  { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 8px; font-size: 13px; outline: none; width: 100%; }
+  .ap-input:focus { border-color: var(--accent); }
+  .ap-btn    { background: var(--accent); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; width: 100%; }
+  .ap-btn:hover { background: #3d7ef0; }
+  .ap-reset-btn { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
+  .ap-reset-btn:hover { background: rgba(239,68,68,0.25); }
+
+  /* ═══════════════════════════════════
+     TAB 5 — RIVAL KEEPER TRACKER
+  ═══════════════════════════════════ */
+  .rkt-main { display: grid; grid-template-columns: 1fr 300px; gap: 0; min-height: 700px; }
+  .rkt-left { padding: 20px 28px; display: flex; flex-direction: column; gap: 14px; border-right: 1px solid var(--border); }
+  .rkt-sidebar { padding: 20px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; max-height: 88vh; position: sticky; top: 0; }
+  .rkt-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+  .rkt-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; border-left: 4px solid var(--border); }
+  .rkt-card.threat-high   { border-left-color: var(--red); }
+  .rkt-card.threat-medium { border-left-color: var(--yellow); }
+  .rkt-card.threat-low    { border-left-color: var(--green); }
+  .rkt-card.is-us         { border-left-color: var(--accent); }
+  .rkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .rkt-team-name { font-size: 14px; font-weight: 700; }
+  .rkt-division  { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+  .rkt-budget-display { text-align: right; }
+  .rkt-budget-val { font-size: 22px; font-weight: 800; line-height: 1; }
+  .rkt-budget-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+  .rkt-budget-bar-bg   { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; margin: 8px 0; }
+  .rkt-budget-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .rkt-keeper-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 8px; background: var(--surface2); border-radius: 6px; margin-bottom: 4px; }
+  .rkt-keeper-name { font-size: 12px; font-weight: 600; }
+  .rkt-keeper-cost { font-size: 12px; font-weight: 700; color: var(--gold); }
+  .rkt-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+  .rkt-tag-flush { background: rgba(239,68,68,0.15);  color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+  .rkt-tag-tight { background: rgba(34,197,94,0.12);  color: var(--green);  border: 1px solid rgba(34,197,94,0.25); }
+  .rkt-tag-mid   { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }
+  .rkt-callout         { font-size: 11px; color: var(--muted); padding: 7px 10px; border-radius: 6px; margin-top: 6px; line-height: 1.5; }
+  .rkt-callout-opp     { background: rgba(34,197,94,0.06);  border: 1px solid rgba(34,197,94,0.2); }
+  .rkt-callout-danger  { background: rgba(239,68,68,0.06);  border: 1px solid rgba(239,68,68,0.2); }
+  .rkt-rank-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; margin-bottom: 3px; }
+  .rkt-rank-row:nth-child(odd) { background: rgba(255,255,255,0.02); }
+  .rkt-rank-num  { font-size: 12px; font-weight: 800; width: 18px; text-align: center; color: var(--muted); }
+  .rkt-rank-name { font-size: 12px; font-weight: 600; flex: 1; }
+  .rkt-rank-bud  { font-size: 13px; font-weight: 800; width: 42px; text-align: right; }
+  .rkt-fa-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--surface2); border-radius: 6px; margin-bottom: 4px; border-left: 3px solid var(--accent); }
+  .rkt-filters { padding: 12px 28px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+  /* ═══════════════════════════════════
      RESPONSIVE
   ═══════════════════════════════════ */
   @media (max-width: 1000px) {
@@ -381,8 +469,11 @@
     <button class="tab-btn" onclick="switchTab('scoring', this)">
       <span class="tab-icon">📊</span>Scoring Projections
     </button>
-    <button class="tab-btn" onclick="switchTab('auction', this)" style="opacity:0.5; cursor:not-allowed;" disabled>
-      <span class="tab-icon">⚖️</span>Auction Prep <span style="font-size:10px; color:var(--muted);">(Soon)</span>
+    <button class="tab-btn" onclick="switchTab('auction', this)">
+      <span class="tab-icon">⚖️</span>Auction Prep
+    </button>
+    <button class="tab-btn" onclick="switchTab('rival', this)">
+      <span class="tab-icon">🕵️</span>Rival Keepers
     </button>
   </div>
 </div>
@@ -715,8 +806,157 @@
   </div><!-- /sp-layout -->
 </div>
 
-<!-- Future tab panel -->
-<div class="tab-panel" id="tab-auction"></div>
+<!-- ═══════════════════════════════════════════
+     TAB 4: AUCTION DRAFT PREP
+════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-auction">
+
+  <!-- BUDGET STATUS BAR -->
+  <div class="ap-budget-bar">
+    <div class="ap-bstat">
+      <div class="v val-green" id="ap-stat-budget">$139</div>
+      <div class="l">Auction Budget</div>
+    </div>
+    <div class="ap-bstat">
+      <div class="v val-blue" id="ap-stat-spots">18</div>
+      <div class="l">Open Spots</div>
+    </div>
+    <div class="ap-bstat">
+      <div class="v val-gold" id="ap-stat-avg">$7.72</div>
+      <div class="l">Avg Per Spot</div>
+    </div>
+    <div class="ap-bstat">
+      <div class="v col-red" id="ap-stat-maxbid">$122</div>
+      <div class="l">Max Next Bid (§3.6)</div>
+    </div>
+  </div>
+  <div class="ap-budget-track">
+    <div class="ap-budget-track-bg">
+      <div class="ap-budget-track-fill" id="ap-budget-bar-fill" style="width:0%;background:var(--green);"></div>
+    </div>
+  </div>
+
+  <!-- MAIN 3-COLUMN LAYOUT -->
+  <div class="ap-main">
+
+    <!-- LEFT: PRIORITY TARGETS + NOMINATION STRATEGY -->
+    <div class="ap-left">
+
+      <div class="card">
+        <div class="card-header">
+          <h2>🎯 2026 Priority Auction Targets</h2>
+          <span class="pill pill-blue">§6.2 Scoring Applied</span>
+        </div>
+        <div style="padding:14px 16px;">
+          <div id="ap-targets-grid" class="ap-targets-grid"></div>
+          <div style="margin-top:10px;font-size:11px;color:var(--muted);">Click any card to pre-fill the auction tracker with that player's name.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>📣 Nomination Strategy</h2>
+          <span class="pill pill-red">Drain Their Budgets</span>
+        </div>
+        <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;" id="ap-nominations"></div>
+        <div style="padding:0 16px 14px;font-size:11px;color:var(--muted);">Nominate rivals' targets early. Cap-constrained teams can't respond — you win the real prizes cheap.</div>
+      </div>
+
+    </div><!-- /ap-left -->
+
+    <!-- CENTER: LIVE AUCTION TRACKER -->
+    <div class="ap-center">
+
+      <div class="card">
+        <div class="card-header">
+          <h2>🏆 Live Auction Tracker</h2>
+          <span class="pill pill-green" id="ap-won-count">0 won</span>
+        </div>
+        <div class="ap-form" style="margin:14px 14px 0;">
+          <input class="ap-input" type="text" id="ap-add-name" placeholder="Player name..." autocomplete="off" onkeydown="if(event.key==='Enter') document.getElementById('ap-add-bid').focus()">
+          <input class="ap-input" type="number" id="ap-add-bid" placeholder="Winning bid ($)" min="1" onkeydown="if(event.key==='Enter') apAddPlayer()">
+          <button class="ap-btn" onclick="apAddPlayer()">+ Won This Player</button>
+        </div>
+        <div style="padding:10px 14px 4px;font-size:10px;color:var(--muted);">⚖️ §3.6 enforced — max bid = budget − remaining spots (must keep $1/spot in reserve)</div>
+        <div style="padding:0 14px 14px;" id="ap-log">
+          <div style="padding:20px;text-align:center;color:var(--muted);font-size:12px;">No players won yet.<br>Add players as you win bids at the auction.</div>
+        </div>
+        <div style="padding:0 14px 14px;display:flex;justify-content:flex-end;">
+          <button class="ap-reset-btn" onclick="apResetTracker()">↺ Reset Tracker</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>📋 Auction Tactics</h2>
+          <span class="pill pill-yellow">§3.6 / §4.4</span>
+        </div>
+        <div style="padding:12px 16px;">
+          <ul class="rec-bullets">
+            <li><strong>§3.6 Reserve:</strong> Max bid = remaining budget − (open spots − 1). App enforces this automatically.</li>
+            <li><strong>RB Premium:</strong> In STFFL, RBs score more reliably. Fill 2 FLEX spots with RBs, not WRs.</li>
+            <li><strong>QB Rule:</strong> 3pt pass TDs cap QB ceiling. Only pay $25+ for rushing QBs (Lamar, Daniels, Allen, Hurts). Stream at $5–10 otherwise.</li>
+            <li><strong>DSTs at $1 each:</strong> Draft 2 at $1. Never stream via waivers — preserve 7 FA moves (§4.4) for RB injuries and WR upgrades.</li>
+            <li><strong>Best value window:</strong> $5–20 range. Let rivals overpay for the $50+ names while you clean up mid-tier.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /ap-center -->
+
+    <!-- RIGHT: RIVAL BUDGET TRACKER -->
+    <div class="ap-right">
+      <div class="card" style="flex:1;">
+        <div class="card-header">
+          <h2>💰 Rival Auction Budgets</h2>
+          <span class="pill pill-blue">Est. After Keepers</span>
+        </div>
+        <div style="padding:6px 14px 4px;font-size:10px;color:var(--muted);">
+          <span style="color:var(--red);font-weight:700;">⚠ FLUSH</span> = big budget, danger &nbsp;|&nbsp; <span style="color:var(--green);font-weight:700;">✓ TIGHT</span> = cap constrained, opportunity
+        </div>
+        <div style="padding:10px 16px;" id="ap-rival-budgets"></div>
+      </div>
+    </div><!-- /ap-right -->
+
+  </div><!-- /ap-main -->
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 5: RIVAL KEEPER TRACKER
+════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-rival">
+
+  <!-- SUMMARY BAR -->
+  <div class="rt-summary-bar" id="rkt-summary-bar">
+    <div class="sum-card"><div class="sum-icon">🔒</div><div><div class="sum-val col-gold" id="rkt-sum-locked">$0</div><div class="sum-lbl">Total Cap Locked</div></div></div>
+    <div class="sum-card"><div class="sum-icon">💰</div><div><div class="sum-val col-blue" id="rkt-sum-avg">$0</div><div class="sum-lbl">Avg Rival Budget</div></div></div>
+    <div class="sum-card"><div class="sum-icon">⚠️</div><div><div class="sum-val col-red"  id="rkt-sum-danger">—</div><div class="sum-lbl">Most Dangerous</div></div></div>
+    <div class="sum-card"><div class="sum-icon">✅</div><div><div class="sum-val col-green" id="rkt-sum-opp">—</div><div class="sum-lbl">Best Opportunity</div></div></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="rkt-filters">
+    <span class="filter-label">Sort:</span>
+    <button class="filter-btn active" onclick="rktSetSort('budget',this)">Budget ↓</button>
+    <button class="filter-btn"        onclick="rktSetSort('threat',this)">Threat</button>
+    <button class="filter-btn"        onclick="rktSetSort('division',this)">Division</button>
+    <span class="filter-label" style="margin-left:14px;">Filter:</span>
+    <button class="filter-btn active" onclick="rktSetFilter('all',this)">All</button>
+    <button class="filter-btn"        onclick="rktSetFilter('flush',this)" style="border-color:rgba(239,68,68,0.4);color:var(--red);">⚠ Flush &gt;$130</button>
+    <button class="filter-btn"        onclick="rktSetFilter('tight',this)" style="border-color:rgba(34,197,94,0.4);color:var(--green);">✓ Tight &lt;$90</button>
+  </div>
+
+  <!-- MAIN 2-COL -->
+  <div class="rkt-main">
+    <div class="rkt-left">
+      <div id="rkt-cards" class="rkt-cards-grid"></div>
+    </div>
+    <div class="rkt-sidebar">
+      <div id="rkt-sidebar"></div>
+    </div>
+  </div>
+
+</div>
 
 <!-- FOOTER -->
 <div class="app-footer">
@@ -2003,12 +2243,402 @@ rtInitTeamSelector();
 rtRenderAll();
 document.getElementById('tab-scoring').addEventListener('click', () => {}, { once: false });
 // Lazy init scoring tab on first view
+// ══════════════════════════════════════════════
+// ║  AUCTION PREP TOOL
+// ══════════════════════════════════════════════
+
+// ── PRIORITY TARGETS (§7.2 from handoff) ──────
+const AP_TARGETS = [
+  { name: 'Lamar Jackson',       pos: 'QB',    bid: '$25–30', tier: 'priority', reason: 'Best QB in STFFL scoring. Rush TDs dominate — §6.2 makes him uniquely valuable over any pocket passer.' },
+  { name: "De'Von Achane",        pos: 'RB',    bid: '$12–18', tier: 'priority', reason: 'MIA rebuild is discounting elite talent. Buy low on a breakout-level RB while rivals sleep.' },
+  { name: 'Jaylen Waddle',        pos: 'WR',    bid: '$13–18', tier: 'priority', reason: 'Traded to DEN. Bo Nix Year 2 leap expected. WR1 upside. Buy before rivals price-adjust.' },
+  { name: "Wan'Dale Robinson",    pos: 'WR',    bid: '$8–14',  tier: 'priority', reason: '4yr $78M deal. Locked WR1 with Cam Ward in TEN. Buy cheap before others realize.' },
+  { name: 'Travis Hunter',        pos: 'WR',    bid: '$10–16', tier: 'value',    reason: 'Young, ascending WR. Was on your bench last year. Re-acquire fresh at Year 1 contract.' },
+  { name: 'Romeo Doubs',          pos: 'WR',    bid: '$10–15', tier: 'value',    reason: 'Left GB, WR1 shot with Drake Maye (NE Year 2 leap expected). Undervalued by the room.' },
+  { name: 'KaVontae Turpin',      pos: 'WR',    bid: '$1–3',   tier: 'lottery',  reason: 'Return TD rule: 6pts to the individual (§6.2). $1–3 is pure upside lottery. Always draft.' },
+];
+
+// ── NOMINATION STRATEGY (§7.3 from handoff) ───
+const AP_NOMINATIONS = [
+  { target: 'Ted',              who: 'Lamar Jackson / Josh Allen',  reason: 'Ted desperately needs a starting QB. Nominate Lamar or Allen early — Ted will pay $35+. You don\'t need him at that price.' },
+  { target: 'Simon H.',         who: 'Elite WRs (any)',              reason: 'CMC expires this season, creating a massive roster hole. Simon must compete hard for WRs. Nominate premium names to drain his budget.' },
+  { target: 'Josh M.',          who: 'His own targets',              reason: 'Josh M. has ~$63 auction budget — the tightest in the league. Nominate players he needs to force impossible choices.' },
+  { target: 'Daryl & Michael',  who: 'Mid-tier RBs $15–25',         reason: 'Cap constrained after $200 last season. Force them to choose between positions. Nominate RBs in their must-have range.' },
+];
+
+// ── LIVE AUCTION STATE ─────────────────────────
+let apWonPlayers  = [];
+let apBudgetStart = 139;
+let apSpotsStart  = 18;
+
+function apSyncFromKeepers() {
+  const keepers   = playerState.filter(p => p.status === 'keep');
+  apBudgetStart   = 200 - keepers.reduce((s, p) => s + p.cost, 0);
+  apSpotsStart    = 20  - keepers.length;
+}
+
+function apGetState() {
+  apSyncFromKeepers();
+  const spent     = apWonPlayers.reduce((s, p) => s + p.bid, 0);
+  const spots     = apSpotsStart - apWonPlayers.length;
+  const remaining = apBudgetStart - spent;
+  const maxBid    = Math.max(1, remaining - Math.max(0, spots - 1));
+  const avg       = spots > 0 ? (remaining / spots).toFixed(2) : '—';
+  return { spent, spots, remaining, maxBid, avg };
+}
+
+// ── RENDER: BUDGET BAR ─────────────────────────
+function apRenderBudgetBar() {
+  const { spent, spots, remaining, maxBid, avg } = apGetState();
+  const pct        = Math.min(Math.round((spent / apBudgetStart) * 100), 100);
+  const barColor   = remaining < 40 ? 'var(--red)' : remaining < 80 ? 'var(--yellow)' : 'var(--green)';
+  const budgetCls  = remaining < 40 ? 'col-red' : remaining < 80 ? 'col-yellow' : 'val-green';
+  const maxCls     = maxBid < 20 ? 'col-red' : maxBid < 50 ? 'col-yellow' : 'val-green';
+
+  document.getElementById('ap-stat-budget').textContent = '$' + remaining;
+  document.getElementById('ap-stat-budget').className   = 'v ' + budgetCls;
+  document.getElementById('ap-stat-spots').textContent  = spots;
+  document.getElementById('ap-stat-avg').textContent    = '$' + avg;
+  document.getElementById('ap-stat-maxbid').textContent = '$' + maxBid;
+  document.getElementById('ap-stat-maxbid').className   = 'v ' + maxCls;
+  document.getElementById('ap-budget-bar-fill').style.width      = pct + '%';
+  document.getElementById('ap-budget-bar-fill').style.background = barColor;
+}
+
+// ── RENDER: PRIORITY TARGETS ───────────────────
+function apRenderTargets() {
+  const tierLabel = { priority: 'PRIORITY', value: 'VALUE', lottery: 'LOTTERY' };
+  const tierCls   = { priority: 'badge-priority', value: 'badge-value', lottery: 'badge-lottery' };
+  document.getElementById('ap-targets-grid').innerHTML = AP_TARGETS.map(t => `
+    <div class="ap-target-card tier-${t.tier}" onclick="apQuickFill('${t.name.replace(/'/g,"\\'")}')">
+      <span class="ap-tier-badge ${tierCls[t.tier]}">${tierLabel[t.tier]}</span>
+      <div class="ap-target-head">
+        <span class="ap-target-name">${t.name}</span>
+        <span class="ap-target-bid">${t.bid}</span>
+      </div>
+      <div><span class="pos-badge pos-${t.pos}" style="font-size:9px;">${t.pos}</span></div>
+      <div class="ap-target-reason">${t.reason}</div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER: NOMINATIONS ────────────────────────
+function apRenderNominations() {
+  document.getElementById('ap-nominations').innerHTML = AP_NOMINATIONS.map(n => `
+    <div class="ap-nom-card">
+      <div class="ap-nom-target">NOMINATE AGAINST: ${n.target.toUpperCase()}</div>
+      <div class="ap-nom-who">${n.who}</div>
+      <div class="ap-nom-reason">${n.reason}</div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER: AUCTION LOG ────────────────────────
+function apRenderLog() {
+  const logEl  = document.getElementById('ap-log');
+  const cntEl  = document.getElementById('ap-won-count');
+  cntEl.textContent = apWonPlayers.length + ' won';
+
+  if (!apWonPlayers.length) {
+    logEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px;">No players won yet.<br>Add players as you win bids at the auction.</div>';
+    return;
+  }
+  const total = apWonPlayers.reduce((s, p) => s + p.bid, 0);
+  logEl.innerHTML = apWonPlayers.map((p, i) => `
+    <div class="ap-log-item">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="pos-badge pos-${p.pos}">${p.pos}</span>
+        <span style="font-size:13px;font-weight:600;">${p.name}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:16px;font-weight:800;color:var(--gold);">$${p.bid}</span>
+        <button onclick="apRemovePlayer(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px;" title="Remove">✕</button>
+      </div>
+    </div>
+  `).join('') + `
+    <div style="margin-top:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;display:flex;justify-content:space-between;border:1px solid var(--border);">
+      <span style="font-size:12px;color:var(--muted);">Total spent</span>
+      <span style="font-size:15px;font-weight:800;color:var(--gold);">$${total}</span>
+    </div>`;
+}
+
+// ── RENDER: RIVAL BUDGETS ──────────────────────
+function apRenderRivalBudgets() {
+  const rivals = Object.entries(ALL_ROSTERS).map(([key, roster]) => {
+    const tm       = TEAMS[key];
+    const keepers  = roster
+      .filter(p => p.keepStatus === 'keep')
+      .map(p => ({ ...p, cost: keeperCost(p.sal) }))
+      .sort((a, b) => b.cost - a.cost)
+      .slice(0, 2);
+    const kTotal   = keepers.reduce((s, p) => s + p.cost, 0);
+    const budget   = 200 - kTotal;
+    const spots    = 20  - keepers.length;
+    return { key, label: tm.label, isUs: tm.isUs, keepers, kTotal, budget, spots, threat: tm.threat };
+  }).sort((a, b) => b.budget - a.budget);
+
+  document.getElementById('ap-rival-budgets').innerHTML = rivals.map(r => {
+    const color    = r.isUs        ? 'var(--accent)'  :
+                     r.budget > 130 ? 'var(--red)'    :
+                     r.budget < 90  ? 'var(--green)'  : 'var(--yellow)';
+    const tag      = r.isUs ? '' :
+      r.budget > 130 ? '<span style="font-size:10px;color:var(--red);font-weight:700;margin-left:6px;">⚠ FLUSH</span>' :
+      r.budget < 90  ? '<span style="font-size:10px;color:var(--green);font-weight:700;margin-left:6px;">✓ TIGHT</span>' : '';
+    const pct      = Math.round((r.budget / 200) * 100);
+    const keepTxt  = r.keepers.length
+      ? r.keepers.map(p => `${p.name.split(' ').slice(-1)[0]} $${p.cost}`).join(', ')
+      : 'No keepers estimated';
+    return `
+      <div class="ap-rival-row${r.isUs ? ' is-us' : ''}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+          <span style="font-size:13px;font-weight:700;${r.isUs ? 'color:var(--accent);' : ''}">${r.isUs ? '⭐ ' : ''}${r.label}${tag}</span>
+          <span style="font-size:16px;font-weight:800;color:${color};">$${r.budget}</span>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:5px;">${keepTxt}</div>
+        <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── ACTIONS ────────────────────────────────────
+function apQuickFill(name) {
+  document.getElementById('ap-add-name').value = name;
+  document.getElementById('ap-add-bid').focus();
+}
+
+function apAddPlayer() {
+  const nameEl  = document.getElementById('ap-add-name');
+  const bidEl   = document.getElementById('ap-add-bid');
+  const name    = nameEl.value.trim();
+  const bid     = parseInt(bidEl.value);
+
+  if (!name)                  { alert('Enter a player name.'); return; }
+  if (isNaN(bid) || bid < 1)  { alert('Enter a valid bid ($1 minimum).'); return; }
+
+  const { remaining, spots, maxBid } = apGetState();
+  if (spots <= 0)       { alert('All auction spots are filled!'); return; }
+  if (bid > remaining)  { alert(`Bid ($${bid}) exceeds remaining budget ($${remaining})!`); return; }
+  if (bid > maxBid) {
+    alert(`⚖️ §3.6 Violation!\nMax bid is $${maxBid}.\nYou must reserve $1 per remaining spot (${spots - 1} spots left after this = $${spots - 1} reserved).`);
+    return;
+  }
+
+  const stats = PLAYER_STATS[name] || {};
+  const pos   = stats.pos || 'FLEX';
+  apWonPlayers.push({ name, bid, pos });
+  nameEl.value = '';
+  bidEl.value  = '';
+  apRenderAll_ap();
+}
+
+function apRemovePlayer(idx) {
+  apWonPlayers.splice(idx, 1);
+  apRenderAll_ap();
+}
+
+function apResetTracker() {
+  if (apWonPlayers.length && !confirm('Reset the auction tracker? This will clear all won players.')) return;
+  apWonPlayers = [];
+  apRenderAll_ap();
+}
+
+function apRenderAll_ap() {
+  apRenderBudgetBar();
+  apRenderLog();
+  apRenderRivalBudgets();
+}
+
+// ══════════════════════════════════════════════
+// ║  RIVAL KEEPER TRACKER
+// ══════════════════════════════════════════════
+let rktSort   = 'budget';
+let rktFilter = 'all';
+
+function rktBuildData() {
+  return Object.entries(ALL_ROSTERS).map(([key, roster]) => {
+    const tm      = TEAMS[key];
+    const keepers = roster.filter(p => p.keepStatus === 'keep')
+                          .map(p => ({ ...p, keepCost: keeperCost(p.sal) }))
+                          .sort((a, b) => b.keepCost - a.keepCost)
+                          .slice(0, 2);
+    const locked  = keepers.reduce((s, p) => s + p.keepCost, 0);
+    const budget  = 200 - locked;
+    const spots   = 20  - keepers.length;
+    const faReleases = roster.filter(p => p.keepStatus === 'cut' && p.sal >= 20);
+    const budgetTag  = budget > 130 ? 'flush' : budget < 90 ? 'tight' : 'mid';
+    return { key, label: tm.label, division: tm.division, isUs: tm.isUs,
+             threat: tm.threat, keepers, locked, budget, spots, budgetTag,
+             faReleases, opportunity: tm.opportunity, vulnerabilities: tm.vulnerabilities };
+  });
+}
+
+function rktGetFiltered() {
+  let data = rktBuildData();
+  if (rktFilter === 'flush') data = data.filter(d => d.budget > 130);
+  if (rktFilter === 'tight') data = data.filter(d => d.budget < 90);
+  if (rktSort === 'budget')   data.sort((a, b) => b.budget - a.budget);
+  else if (rktSort === 'threat') {
+    const order = { high: 0, medium: 1, low: 2 };
+    data.sort((a, b) => (order[a.threat] ?? 2) - (order[b.threat] ?? 2));
+  } else if (rktSort === 'division') {
+    data.sort((a, b) => a.division.localeCompare(b.division));
+  }
+  return data;
+}
+
+function rktSetSort(field, btn) {
+  rktSort = field;
+  document.querySelectorAll('.rkt-filters .filter-btn').forEach(b => {
+    if (['Budget ↓','Threat','Division'].includes(b.textContent.trim())) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  rktRenderCards(); rktRenderSidebar();
+}
+
+function rktSetFilter(f, btn) {
+  rktFilter = f;
+  document.querySelectorAll('.rkt-filters .filter-btn').forEach(b => {
+    const t = b.textContent.trim();
+    if (t === 'All' || t.includes('Flush') || t.includes('Tight')) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  rktRenderCards(); rktRenderSidebar();
+}
+
+function rktRenderSummaryBar() {
+  const all    = rktBuildData();
+  const rivals = all.filter(d => !d.isUs);
+  const locked = all.reduce((s, d) => s + d.locked, 0);
+  const avgBud = Math.round(rivals.reduce((s, d) => s + d.budget, 0) / rivals.length);
+  const sorted = rivals.slice().sort((a, b) => b.budget - a.budget);
+  const danger = sorted[0];
+  const opp    = sorted[sorted.length - 1];
+  document.getElementById('rkt-sum-locked').textContent = '$' + locked;
+  document.getElementById('rkt-sum-avg').textContent    = '$' + avgBud;
+  document.getElementById('rkt-sum-danger').textContent = danger ? danger.label.split(' ')[0] : '—';
+  document.getElementById('rkt-sum-opp').textContent    = opp    ? opp.label.split(' ')[0]    : '—';
+}
+
+function rktRenderCards() {
+  const data = rktGetFiltered();
+  if (!data.length) {
+    document.getElementById('rkt-cards').innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">No teams match this filter.</div>';
+    return;
+  }
+  document.getElementById('rkt-cards').innerHTML = data.map(d => {
+    const budgetColor = d.budget > 130 ? 'var(--red)' : d.budget < 90 ? 'var(--green)' : 'var(--yellow)';
+    const tagClass    = d.budgetTag === 'flush' ? 'rkt-tag-flush' : d.budgetTag === 'tight' ? 'rkt-tag-tight' : 'rkt-tag-mid';
+    const tagLabel    = d.budgetTag === 'flush' ? '⚠ FLUSH' : d.budgetTag === 'tight' ? '✓ TIGHT' : '~ MID';
+    const pct         = Math.round((d.budget / 200) * 100);
+    const keepersHtml = d.keepers.length
+      ? d.keepers.map(p => `
+          <div class="rkt-keeper-row">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="pos-badge pos-${p.pos}">${p.pos}</span>
+              <span class="rkt-keeper-name">${p.name}</span>
+            </div>
+            <span class="rkt-keeper-cost">$${p.keepCost} <span style="font-size:10px;color:var(--muted);">(was $${p.sal})</span></span>
+          </div>`).join('')
+      : '<div style="font-size:12px;color:var(--muted);padding:6px 0;">No keepers estimated — full $200 available</div>';
+    const callout = d.isUs ? '' : d.budget > 130
+      ? `<div class="rkt-callout rkt-callout-danger">⚠ <strong>Danger:</strong> ${d.vulnerabilities || 'High budget — bidding threat.'}</div>`
+      : d.budget < 90
+      ? `<div class="rkt-callout rkt-callout-opp">✓ <strong>Opportunity:</strong> ${d.opportunity || 'Cap-constrained — cannot compete for premium players.'}</div>`
+      : '';
+    return `
+      <div class="rkt-card ${d.isUs ? 'is-us' : 'threat-' + d.threat}">
+        <div class="rkt-card-head">
+          <div>
+            <div class="rkt-team-name">${d.isUs ? '⭐ ' : ''}${d.label}</div>
+            <div class="rkt-division">${d.division} Division</div>
+          </div>
+          <div class="rkt-budget-display">
+            <div class="rkt-budget-val" style="color:${budgetColor};">${'$' + d.budget}</div>
+            <div class="rkt-budget-lbl">Budget left</div>
+            <span class="rkt-tag ${tagClass}" style="margin-top:4px;display:inline-block;">${tagLabel}</span>
+          </div>
+        </div>
+        <div class="rkt-budget-bar-bg">
+          <div class="rkt-budget-bar-fill" style="width:${pct}%;background:${budgetColor};"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">$${d.locked} locked · ${d.spots} spots open</div>
+        ${keepersHtml}
+        ${callout}
+      </div>`;
+  }).join('');
+}
+
+function rktRenderSidebar() {
+  const allData = rktBuildData().sort((a, b) => b.budget - a.budget);
+
+  const tableHtml = allData.map((d, i) => {
+    const color = d.budget > 130 ? 'var(--red)' : d.budget < 90 ? 'var(--green)' : 'var(--yellow)';
+    const tag   = d.budgetTag === 'flush'
+      ? '<span class="rkt-tag rkt-tag-flush" style="font-size:9px;">FLUSH</span>'
+      : d.budgetTag === 'tight'
+      ? '<span class="rkt-tag rkt-tag-tight" style="font-size:9px;">TIGHT</span>' : '';
+    const rowStyle = d.isUs ? ' style="background:rgba(79,142,247,0.07);border:1px solid rgba(79,142,247,0.2);border-radius:6px;"' : '';
+    return `<div class="rkt-rank-row"${rowStyle}>
+      <span class="rkt-rank-num">${i + 1}</span>
+      <span class="rkt-rank-name">${d.isUs ? '⭐ ' : ''}${d.label.split(' ')[0]}</span>
+      ${tag}
+      <span class="rkt-rank-bud" style="color:${color};">$${d.budget}</span>
+    </div>`;
+  }).join('');
+
+  const faItems = allData.filter(d => !d.isUs)
+    .flatMap(d => d.faReleases.map(p => ({ ...p, teamLabel: d.label })))
+    .sort((a, b) => b.sal - a.sal).slice(0, 10);
+
+  const faHtml = faItems.length
+    ? faItems.map(p => `
+        <div class="rkt-fa-item">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="pos-badge pos-${p.pos}">${p.pos}</span>
+            <div>
+              <div style="font-size:12px;font-weight:600;">${p.name}</div>
+              <div style="font-size:10px;color:var(--muted);">${p.teamLabel}</div>
+            </div>
+          </div>
+          <span style="font-size:13px;font-weight:700;color:var(--gold);">$${p.sal}</span>
+        </div>`).join('')
+    : '<div style="font-size:12px;color:var(--muted);padding:8px 0;">No high-value releases found.</div>';
+
+  document.getElementById('rkt-sidebar').innerHTML = `
+    <div class="card">
+      <div class="card-header"><h2>League Budget Rankings</h2><span class="pill pill-blue">All 12 Teams</span></div>
+      <div style="padding:10px 14px;">${tableHtml}</div>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header"><h2>🎯 Key FA Releases</h2><span class="pill pill-yellow">$20+ Salary</span></div>
+      <div style="padding:10px 14px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">High-value players rivals are cutting — available at auction.</div>
+        ${faHtml}
+      </div>
+    </div>`;
+}
+
+function rktRenderAll() {
+  rktRenderSummaryBar();
+  rktRenderCards();
+  rktRenderSidebar();
+}
+
+// ── TAB INIT (lazy) ────────────────────────────
 (function() {
-  let spInited = false;
+  let spInited  = false;
+  let apInited  = false;
+  let rktInited = false;
   const origSwitch = switchTab;
   window.switchTab = function(name, btn) {
     origSwitch(name, btn);
-    if (name === 'scoring' && !spInited) { spInited = true; spRenderAll(); }
+    if (name === 'scoring' && !spInited)  { spInited  = true; spRenderAll(); }
+    if (name === 'auction' && !apInited)  { apInited  = true; apRenderTargets(); apRenderNominations(); apRenderAll_ap(); }
+    else if (name === 'auction')          { apRenderAll_ap(); } // re-sync if keepers changed
+    if (name === 'rival'   && !rktInited) { rktInited = true; rktRenderAll(); }
+    else if (name === 'rival')            { rktRenderAll(); }
   };
 })();
 </script>
