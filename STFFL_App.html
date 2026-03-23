@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STFFL — Adam & Matt 2026</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #22c55e;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --orange: #fb923c;
+    --text: #e8eaf6;
+    --muted: #8892b0;
+    --gold: #f7c948;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* ═══════════════════════════════════
+     GLOBAL HEADER
+  ═══════════════════════════════════ */
+  .app-header {
+    background: linear-gradient(135deg, #1a1d27 0%, #0f1320 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px 0;
+  }
+  .app-header-top {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    padding-bottom: 14px;
+  }
+  .app-title { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+  .app-title span { color: var(--accent); }
+  .app-subtitle { color: var(--muted); font-size: 12px; margin-top: 3px; }
+  .header-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .hbadge { font-size: 11px; font-weight: 600; padding: 3px 11px; border-radius: 20px; letter-spacing: 0.4px; }
+  .hb-blue  { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+  .hb-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .hb-red   { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .hb-gold  { background: rgba(247,201,72,0.15); color: var(--gold); border: 1px solid rgba(247,201,72,0.3); }
+
+  /* ═══════════════════════════════════
+     TAB NAV
+  ═══════════════════════════════════ */
+  .tab-nav { display: flex; gap: 2px; }
+  .tab-btn {
+    padding: 10px 20px; background: transparent; border: none; border-bottom: 3px solid transparent;
+    color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn .tab-icon { margin-right: 6px; }
+  .tab-btn .tab-badge {
+    display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px;
+    background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3);
+  }
+
+  /* ═══════════════════════════════════
+     TAB PANELS
+  ═══════════════════════════════════ */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ═══════════════════════════════════
+     SHARED COMPONENTS
+  ═══════════════════════════════════ */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .card-header { padding: 14px 18px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-header h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .pill { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; }
+  .pill-blue   { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+  .pill-green  { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .pill-yellow { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }
+  .pill-red    { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+  .pos-badge { display: inline-block; width: 32px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+  .pos-QB  { background: rgba(79,142,247,0.2); color: #6fa8f7; }
+  .pos-RB  { background: rgba(34,197,94,0.2); color: #5dd680; }
+  .pos-WR  { background: rgba(245,158,11,0.2); color: #f7c948; }
+  .pos-TE  { background: rgba(239,68,68,0.2); color: #f87171; }
+  .pos-K   { background: rgba(148,163,184,0.2); color: #94a3b8; }
+  .pos-DST { background: rgba(124,92,252,0.2); color: #a78bfa; }
+
+  /* ═══════════════════════════════════
+     TAB 1 — KEEPER CALCULATOR
+  ═══════════════════════════════════ */
+  .kc-main { display: grid; grid-template-columns: 1fr 380px; gap: 20px; padding: 20px 28px; max-width: 1400px; }
+  .kc-left { display: flex; flex-direction: column; gap: 16px; }
+  .kc-right { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Cap bar */
+  .cap-section { padding: 18px; }
+  .cap-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .cap-label span { font-size: 12px; color: var(--muted); }
+  .cap-label strong { font-size: 15px; font-weight: 700; }
+  .cap-bar-bg { height: 10px; background: rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; margin-bottom: 6px; }
+  .cap-bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s ease, background 0.3s; }
+  .cap-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .cap-stat { background: var(--surface2); border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .cap-stat .val { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+  .cap-stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .val-green { color: var(--green); }
+  .val-blue  { color: var(--accent); }
+  .val-gold  { color: var(--gold); }
+  .col-gold  { color: var(--gold); }
+
+  /* Roster table */
+  .roster-table { width: 100%; border-collapse: collapse; }
+  .roster-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); padding: 8px 14px; text-align: left; background: rgba(255,255,255,0.02); }
+  .roster-table td { padding: 9px 14px; border-top: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+  .roster-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .player-name { font-weight: 600; color: var(--text); }
+  .nfl-team { color: var(--muted); font-size: 11px; }
+  .salary-val { font-weight: 700; }
+  .keeper-cost { font-weight: 700; }
+  .row-keep td:first-child { border-left: 3px solid var(--green); }
+  .row-cut td:first-child { border-left: 3px solid rgba(239,68,68,0.3); }
+  .row-monitor td:first-child { border-left: 3px solid var(--yellow); }
+  .row-keep { background: rgba(34,197,94,0.03); }
+  .row-cut { opacity: 0.55; }
+  .yr1 { color: var(--green); font-size: 11px; font-weight: 600; }
+  .yr2 { color: var(--yellow); font-size: 11px; font-weight: 600; }
+  .yr3 { color: var(--red); font-size: 11px; font-weight: 600; }
+
+  /* Status buttons */
+  .status-btn { padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.15s; }
+  .status-keep    { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .status-keep:hover { background: rgba(34,197,94,0.3); }
+  .status-cut     { background: rgba(239,68,68,0.1); color: #ef4444aa; border: 1px solid rgba(239,68,68,0.15); }
+  .status-cut:hover { background: rgba(239,68,68,0.2); color: var(--red); }
+  .status-monitor { background: rgba(245,158,11,0.1); color: #f59e0baa; border: 1px solid rgba(245,158,11,0.15); }
+  .status-monitor:hover { background: rgba(245,158,11,0.25); color: var(--yellow); }
+
+  /* Keeper slots */
+  .keeper-selector { padding: 16px 18px; }
+  .keeper-slots { display: flex; gap: 10px; margin-bottom: 16px; }
+  .keeper-slot { flex: 1; border: 2px dashed var(--border); border-radius: 10px; padding: 12px; min-height: 70px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: all 0.15s; position: relative; }
+  .keeper-slot.active { border-color: var(--green); border-style: solid; background: rgba(34,197,94,0.06); }
+  .keeper-slot .slot-pos { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 3px; }
+  .keeper-slot .slot-name { font-size: 13px; font-weight: 700; }
+  .keeper-slot .slot-cost { font-size: 18px; font-weight: 800; color: var(--green); }
+  .keeper-slot .remove-btn { position: absolute; top: 5px; right: 7px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px; }
+  .keeper-slot .remove-btn:hover { color: var(--red); }
+
+  /* Combos */
+  .combos-list { padding: 0 18px 16px; }
+  .combo-item { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; }
+  .combo-item:hover { border-color: var(--accent); background: rgba(79,142,247,0.05); }
+  .combo-item.recommended { border-color: var(--green); background: rgba(34,197,94,0.05); }
+  .combo-item.selected { border-color: var(--accent); background: rgba(79,142,247,0.08); }
+  .combo-names { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .combo-sub { font-size: 11px; color: var(--muted); }
+  .combo-right { text-align: right; }
+  .combo-cost { font-size: 17px; font-weight: 800; color: var(--gold); }
+  .combo-budget { font-size: 11px; color: var(--green); }
+  .rec-tag { font-size: 10px; background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 4px; padding: 1px 6px; font-weight: 700; display: inline-block; margin-bottom: 4px; }
+
+  /* Rec bullets */
+  .rec-card { padding: 16px 18px; }
+  .rec-bullets { list-style: none; }
+  .rec-bullets li { font-size: 12px; color: var(--muted); padding: 4px 0 4px 16px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .rec-bullets li:before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+  .rec-bullets li:last-child { border-bottom: none; }
+  .rec-bullets li strong { color: var(--text); }
+
+  /* Tier table */
+  .tier-table { padding: 0 18px 14px; }
+  .tier-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-radius: 6px; margin-bottom: 3px; }
+  .tier-row:nth-child(odd) { background: rgba(255,255,255,0.02); }
+  .tier-range { font-size: 12px; color: var(--muted); }
+  .tier-mult  { font-size: 12px; font-weight: 700; color: var(--accent); }
+
+  /* Alert */
+  .alert { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin: 0 18px 12px; }
+  .alert-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: var(--yellow); }
+  .alert-ok   { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.25);  color: var(--green); }
+  .alert-info { background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.25); color: var(--accent); }
+
+  /* ═══════════════════════════════════
+     TAB 2 — ROSTER TRACKER
+  ═══════════════════════════════════ */
+  .rt-summary-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px 28px; border-bottom: 1px solid var(--border); }
+  .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .sum-icon { font-size: 22px; }
+  .sum-val  { font-size: 22px; font-weight: 800; line-height: 1; }
+  .sum-lbl  { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .col-red    { color: var(--red); }
+  .col-yellow { color: var(--yellow); }
+  .col-green  { color: var(--green); }
+  .col-blue   { color: var(--accent); }
+
+  .rt-filters { padding: 14px 28px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .filter-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
+  .filter-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+  .filter-btn.f-critical.active { border-color: var(--red);    color: var(--red);    background: rgba(239,68,68,0.08); }
+  .filter-btn.f-monitor.active  { border-color: var(--yellow); color: var(--yellow); background: rgba(245,158,11,0.08); }
+  .filter-btn.f-stable.active   { border-color: var(--green);  color: var(--green);  background: rgba(34,197,94,0.08); }
+  .search-box { margin-left: auto; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; outline: none; min-width: 180px; }
+  .search-box::placeholder { color: var(--muted); }
+
+  .rt-main { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: 600px; }
+
+  .player-list-rt { padding: 16px 28px; }
+  .section-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 8px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+
+  .player-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start; }
+  .player-card:hover  { border-color: var(--accent); background: rgba(79,142,247,0.04); }
+  .player-card.selected { border-color: var(--accent); background: rgba(79,142,247,0.07); }
+
+  .card-left { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 2px; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-critical { background: var(--red);    box-shadow: 0 0 6px var(--red); }
+  .dot-monitor  { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+  .dot-stable   { background: var(--green);  box-shadow: 0 0 6px var(--green); }
+
+  .card-mid { display: flex; flex-direction: column; gap: 4px; }
+  .pc-name  { font-size: 15px; font-weight: 700; color: var(--text); }
+  .pc-team  { font-size: 11px; color: var(--muted); }
+  .latest-news { font-size: 12px; color: var(--muted); line-height: 1.4; margin-top: 4px; }
+  .news-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 4px; margin-right: 5px; }
+  .tag-critical { background: rgba(239,68,68,0.15);  color: #f87171;       border: 1px solid rgba(239,68,68,0.25); }
+  .tag-monitor  { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.25); }
+  .tag-stable   { background: rgba(34,197,94,0.12);  color: var(--green);  border: 1px solid rgba(34,197,94,0.2); }
+  .tag-info     { background: rgba(79,142,247,0.12); color: var(--accent); border: 1px solid rgba(79,142,247,0.2); }
+
+  .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .salary-stack { text-align: right; }
+  .sal-25  { font-size: 12px; color: var(--muted); }
+  .sal-26  { font-size: 16px; font-weight: 800; }
+  .sal-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .keep-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+  .keep-yes     { background: rgba(34,197,94,0.12);  color: var(--green);  border: 1px solid rgba(34,197,94,0.25); }
+  .keep-cut     { background: rgba(239,68,68,0.1);   color: #f87171aa;     border: 1px solid rgba(239,68,68,0.15); }
+  .keep-monitor { background: rgba(245,158,11,0.1);  color: #f59e0baa;     border: 1px solid rgba(245,158,11,0.15); }
+
+  /* Detail panel */
+  .detail-panel { border-left: 1px solid var(--border); background: var(--surface); padding: 20px; overflow-y: auto; max-height: 85vh; position: sticky; top: 0; }
+  .detail-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px; color: var(--muted); font-size: 13px; text-align: center; gap: 8px; }
+  .detail-empty .icon { font-size: 32px; opacity: 0.3; }
+  .detail-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .detail-sub  { font-size: 12px; color: var(--muted); }
+  .detail-status-bar { display: flex; align-items: center; gap: 8px; margin: 12px 0; padding: 10px 12px; border-radius: 8px; }
+  .dsb-critical { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.2); }
+  .dsb-monitor  { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); }
+  .dsb-stable   { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.2); }
+  .dsb-icon { font-size: 18px; }
+  .dsb-text { font-size: 13px; font-weight: 600; }
+
+  .detail-section { margin-bottom: 16px; }
+  .detail-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-item { background: var(--surface2); border-radius: 8px; padding: 8px 10px; }
+  .stat-val { font-size: 17px; font-weight: 800; }
+  .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+  .news-feed { display: flex; flex-direction: column; gap: 8px; }
+  .news-item { padding: 10px 12px; border-radius: 8px; background: var(--surface2); border-left: 3px solid; font-size: 12px; line-height: 1.5; }
+  .ni-critical { border-color: var(--red); }
+  .ni-monitor  { border-color: var(--yellow); }
+  .ni-stable   { border-color: var(--green); }
+  .ni-info     { border-color: var(--accent); }
+  .ni-date { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  .action-box { background: var(--surface2); border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border); }
+  .action-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; }
+  .action-text  { font-size: 13px; line-height: 1.6; }
+
+  /* Alert banner */
+  .alert-banner { margin: 12px 28px 0; padding: 10px 16px; border-radius: 8px; font-size: 12px; display: flex; align-items: flex-start; gap: 10px; }
+  .ab-critical { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+  .ab-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .ab-body strong { display: block; font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+
+  /* ═══════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════ */
+  .app-footer { padding: 12px 28px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; display: flex; justify-content: space-between; margin-top: 20px; }
+
+  /* ═══════════════════════════════════
+     TAB 3 — SCORING PROJECTIONS
+  ═══════════════════════════════════ */
+  .sp-layout { display: grid; grid-template-columns: 1fr 340px; gap: 0; min-height: 700px; }
+  .sp-left  { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border); overflow-y: auto; }
+  .sp-right { padding: 20px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; max-height: 90vh; position: sticky; top: 0; }
+
+  /* Top control bar */
+  .sp-controls { padding: 12px 24px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: var(--surface); }
+  .sp-controls .filter-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* League comparison bar */
+  .league-bar-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; cursor: pointer; transition: background 0.12s; }
+  .league-bar-row:hover { background: rgba(255,255,255,0.04); }
+  .league-bar-row.is-us { background: rgba(79,142,247,0.07); border: 1px solid rgba(79,142,247,0.2); }
+  .lb-rank { font-size: 13px; font-weight: 800; width: 22px; text-align: center; flex-shrink: 0; }
+  .lb-name { font-size: 12px; font-weight: 600; width: 130px; flex-shrink: 0; }
+  .lb-bar-bg { flex: 1; height: 14px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+  .lb-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .lb-pts { font-size: 13px; font-weight: 800; width: 52px; text-align: right; flex-shrink: 0; }
+  .lb-diff { font-size: 11px; width: 52px; text-align: right; flex-shrink: 0; color: var(--muted); }
+
+  /* Player projection table */
+  .proj-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proj-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); padding: 7px 10px; text-align: left; background: rgba(255,255,255,0.02); position: sticky; top: 0; z-index: 1; }
+  .proj-table th.sort-asc::after  { content: ' ↑'; color: var(--accent); }
+  .proj-table th.sort-desc::after { content: ' ↓'; color: var(--accent); }
+  .proj-table th[data-sort] { cursor: pointer; user-select: none; }
+  .proj-table th[data-sort]:hover { color: var(--text); }
+  .proj-table td { padding: 8px 10px; border-top: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+  .proj-table tr:hover td { background: rgba(255,255,255,0.025); cursor: pointer; }
+  .proj-table tr.selected td { background: rgba(79,142,247,0.08); }
+  .proj-table tr.is-us td:first-child { border-left: 3px solid var(--accent); }
+  .eff-bar { height: 6px; border-radius: 3px; background: var(--green); display: inline-block; vertical-align: middle; }
+
+  /* AI panel */
+  .ai-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px; color: var(--muted); font-size: 13px; }
+  .ai-spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-content { font-size: 13px; line-height: 1.7; color: var(--text); }
+  .ai-content strong { color: var(--accent); }
+  .ai-section { margin-bottom: 14px; }
+  .ai-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+
+  /* Summary stat boxes */
+  .sp-stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+  .sp-stat { background: var(--surface2); border-radius: 8px; padding: 10px 12px; text-align: center; border: 1px solid var(--border); }
+  .sp-stat .v { font-size: 20px; font-weight: 800; }
+  .sp-stat .l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+  /* ═══════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════ */
+  @media (max-width: 1000px) {
+    .kc-main { grid-template-columns: 1fr; }
+    .rt-main { grid-template-columns: 1fr; }
+    .detail-panel { position: static; max-height: none; border-left: none; border-top: 1px solid var(--border); }
+    .rt-summary-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .app-header { padding: 14px 16px 0; }
+    .kc-main, .player-list-rt { padding: 12px 16px; }
+    .rt-summary-bar, .rt-filters { padding: 12px 16px; }
+    .tab-btn { padding: 8px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     GLOBAL APP HEADER
+════════════════════════════════════════════ -->
+<div class="app-header">
+  <div class="app-header-top">
+    <div>
+      <div class="app-title">STFFL <span>Command Centre</span></div>
+      <div class="app-subtitle">Adam & Matt · Pantioras Division · Season 15 → 16 · 2026 Offseason</div>
+    </div>
+    <div class="header-badges">
+      <span class="hbadge hb-red">🚨 2 Critical Alerts</span>
+      <span class="hbadge hb-gold">2026 Offseason</span>
+      <span class="hbadge hb-blue">Phase 1 — Build</span>
+      <span class="hbadge hb-green">$200 Cap · 2 Keepers Max</span>
+    </div>
+  </div>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('keeper', this)">
+      <span class="tab-icon">🔒</span>Keeper Calculator
+    </button>
+    <button class="tab-btn" onclick="switchTab('roster', this)">
+      <span class="tab-icon">📡</span>Live Roster Tracker
+      <span class="tab-badge">2 !</span>
+    </button>
+    <!-- Future tabs added here -->
+    <button class="tab-btn" onclick="switchTab('scoring', this)">
+      <span class="tab-icon">📊</span>Scoring Projections
+    </button>
+    <button class="tab-btn" onclick="switchTab('auction', this)" style="opacity:0.5; cursor:not-allowed;" disabled>
+      <span class="tab-icon">⚖️</span>Auction Prep <span style="font-size:10px; color:var(--muted);">(Soon)</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 1: KEEPER CALCULATOR
+════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-keeper">
+  <div class="kc-main">
+    <!-- LEFT -->
+    <div class="kc-left">
+
+      <!-- CAP STATUS -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Salary Cap Status</h2>
+          <span class="pill pill-blue" id="cap-pill">$200 Base Cap</span>
+        </div>
+        <div class="cap-section">
+          <div class="cap-label">
+            <span>Keeper cost locked in</span>
+            <strong id="cap-locked-label">$0 locked</strong>
+          </div>
+          <div class="cap-bar-bg">
+            <div class="cap-bar-fill" id="cap-bar" style="width:0%; background: var(--green);"></div>
+          </div>
+          <div class="cap-stats">
+            <div class="cap-stat"><div class="val val-gold"  id="stat-locked">$0</div><div class="lbl">Keepers Locked</div></div>
+            <div class="cap-stat"><div class="val val-blue"  id="stat-budget">$200</div><div class="lbl">Auction Budget</div></div>
+            <div class="cap-stat"><div class="val val-green" id="stat-avg">$11.11</div><div class="lbl">Avg Per Spot</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROSTER TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Full Roster — Click to Toggle Status</h2>
+          <span class="pill pill-blue">18 Players · $186 Spent</span>
+        </div>
+        <table class="roster-table" id="roster-table">
+          <thead>
+            <tr>
+              <th>Pos</th><th>Player</th><th>NFL Team</th>
+              <th>2025 $</th><th>2026 Cost</th><th>Yr</th><th>Status</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="roster-tbody"></tbody>
+        </table>
+      </div>
+
+    </div><!-- /kc-left -->
+
+    <!-- RIGHT -->
+    <div class="kc-right">
+
+      <!-- KEEPER SLOTS -->
+      <div class="card">
+        <div class="card-header">
+          <h2>My 2026 Keepers</h2>
+          <span class="pill pill-green">Max 2 · §2.3</span>
+        </div>
+        <div class="keeper-selector">
+          <div class="keeper-slots">
+            <div class="keeper-slot" id="slot-0">
+              <div class="slot-pos">Keeper 1</div>
+              <div style="color:var(--muted);font-size:12px;">Click KEEP on a player</div>
+            </div>
+            <div class="keeper-slot" id="slot-1">
+              <div class="slot-pos">Keeper 2</div>
+              <div style="color:var(--muted);font-size:12px;">Click KEEP on a player</div>
+            </div>
+          </div>
+          <div id="kc-alert-area"></div>
+        </div>
+      </div>
+
+      <!-- COMBOS -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Recommended Combos</h2>
+          <span class="pill pill-yellow">§5.4 Tiers Applied</span>
+        </div>
+        <div class="combos-list" id="combos-list"></div>
+      </div>
+
+      <!-- WHY COOK + NJOKU -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Why Cook + Njoku</h2>
+          <span class="pill pill-green">★ Recommended</span>
+        </div>
+        <div class="rec-card">
+          <ul class="rec-bullets">
+            <li><strong>James Cook</strong> — Josh Allen 6yr/$330M. Elite BUF offense, no RB1 competition. Anchor piece.</li>
+            <li><strong>David Njoku</strong> — $6 last season → only $11 to keep. TE of his calibre costs $15–25 at auction. Best value play.</li>
+            <li><strong>$139 remaining</strong> for 18 spots = $7.72 avg. Most flexible budget of all combos.</li>
+            <li><strong>Locks in</strong> elite RB1 + elite TE. Build balanced roster around them.</li>
+            <li><strong>Both Year 1</strong> of 3-season max. No contract pressure until 2028.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SALARY TIERS -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Salary Escalation Tiers</h2>
+          <span class="pill pill-blue">Constitution §5.4</span>
+        </div>
+        <div class="tier-table">
+          <div class="tier-row"><span class="tier-range">$1 – $5</span><span class="tier-mult">× 2.00</span></div>
+          <div class="tier-row"><span class="tier-range">$6 – $10</span><span class="tier-mult">× 1.80</span></div>
+          <div class="tier-row"><span class="tier-range">$11 – $15</span><span class="tier-mult">× 1.55</span></div>
+          <div class="tier-row"><span class="tier-range">$16 – $20</span><span class="tier-mult">× 1.50</span></div>
+          <div class="tier-row"><span class="tier-range">$21 – $25</span><span class="tier-mult">× 1.40</span></div>
+          <div class="tier-row"><span class="tier-range">$26 – $30</span><span class="tier-mult">× 1.33</span></div>
+          <div class="tier-row"><span class="tier-range">$31 – $40</span><span class="tier-mult">× 1.30</span></div>
+          <div class="tier-row"><span class="tier-range">$41 – $50</span><span class="tier-mult">× 1.25</span></div>
+          <div class="tier-row"><span class="tier-range">$51 – $60</span><span class="tier-mult">× 1.22</span></div>
+          <div class="tier-row"><span class="tier-range">$61+</span><span class="tier-mult">× 1.20</span></div>
+          <div style="padding:8px 10px; font-size:11px; color:var(--muted);">All salaries rounded up to nearest whole dollar.</div>
+        </div>
+      </div>
+
+    </div><!-- /kc-right -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 2: LIVE ROSTER TRACKER
+════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-roster">
+
+  <!-- ALERT BANNER -->
+  <div class="alert-banner ab-critical">
+    <span class="ab-icon">🚨</span>
+    <div class="ab-body">
+      <strong>KEEPER DECISION ALERT — David Njoku (TE, CLE) left Cleveland as a free agent</strong>
+      Visited Baltimore Ravens Mar 18 — would be TE2 behind Mark Andrews. Jerry Jeudy trade risk: Browns linked to WR Round 1 draft pick. Review your keeper combo before locking in.
+    </div>
+  </div>
+
+  <!-- TEAM SELECTOR -->
+  <div style="padding:14px 28px 0; border-bottom:1px solid var(--border); background:var(--surface);">
+    <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:var(--muted); margin-bottom:10px;">View Team Roster</div>
+    <div id="team-selector" style="display:flex; flex-wrap:wrap; gap:6px; padding-bottom:14px;"></div>
+  </div>
+
+  <!-- TEAM HEADER BAR -->
+  <div id="team-header-bar" style="padding:14px 28px; background:var(--surface2); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+    <div>
+      <div id="team-header-name" style="font-size:18px; font-weight:800;"></div>
+      <div id="team-header-sub" style="font-size:12px; color:var(--muted); margin-top:2px;"></div>
+    </div>
+    <div id="team-header-stats" style="display:flex; gap:12px; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- SUMMARY BAR -->
+  <div class="rt-summary-bar" id="rt-summary-bar">
+    <div class="sum-card"><div class="sum-icon">💰</div><div><div class="sum-val col-gold" id="sum-cap">$0</div><div class="sum-lbl">Cap Spent</div></div></div>
+    <div class="sum-card"><div class="sum-icon">🔒</div><div><div class="sum-val col-green" id="sum-keepers">0</div><div class="sum-lbl">Likely Keepers</div></div></div>
+    <div class="sum-card"><div class="sum-icon">⚠️</div><div><div class="sum-val col-red" id="sum-risks">0</div><div class="sum-lbl">Risk Players</div></div></div>
+    <div class="sum-card"><div class="sum-icon">📋</div><div><div class="sum-val col-blue" id="sum-players">0</div><div class="sum-lbl">Roster Size</div></div></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="rt-filters">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn f-all active" onclick="rtSetFilter('all',this)">All</button>
+    <button class="filter-btn f-keep"       onclick="rtSetFilter('keep',this)" style="border-color:rgba(34,197,94,0.4); color:var(--green);">Keep</button>
+    <button class="filter-btn f-monitor"    onclick="rtSetFilter('monitor',this)">Monitor</button>
+    <button class="filter-btn f-cut"        onclick="rtSetFilter('cut',this)" style="border-color:rgba(239,68,68,0.4); color:var(--red);">Cut</button>
+    <button class="filter-btn"             onclick="rtSetFilter('QB',this)">QB</button>
+    <button class="filter-btn"             onclick="rtSetFilter('RB',this)">RB</button>
+    <button class="filter-btn"             onclick="rtSetFilter('WR',this)">WR</button>
+    <button class="filter-btn"             onclick="rtSetFilter('TE',this)">TE</button>
+    <input class="search-box" type="text" placeholder="Search any player across all teams..." oninput="rtDoSearch(this.value)">
+  </div>
+
+  <!-- MAIN: LIST + DETAIL -->
+  <div class="rt-main">
+    <div class="player-list-rt" id="rt-player-list"></div>
+    <div class="detail-panel" id="rt-detail-panel">
+      <div class="detail-empty">
+        <div class="icon">👈</div>
+        <div>Click any player card<br>to see full analysis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUCTION TARGETS SECTION -->
+  <div style="padding:20px 28px; border-top:2px solid var(--border);">
+    <div style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:14px;">🎯 2026 Auction Targets — Players to Buy</div>
+    <div id="auction-targets-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px;"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 3: SCORING PROJECTIONS
+════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-scoring">
+
+  <!-- CONTROLS -->
+  <div class="sp-controls">
+    <span class="filter-label">Team:</span>
+    <select id="sp-team-select" onchange="spSetTeam(this.value)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;outline:none;">
+      <option value="ADAM">⭐ Adam & Matt</option>
+      <option value="BEN">Ben</option>
+      <option value="DARREN">Darren</option>
+      <option value="DARYL & MICHAEL">Daryl & Michael</option>
+      <option value="DAVE & SIMON">Dave & Simon</option>
+      <option value="HANLEY">Hanley</option>
+      <option value="JOSH M.">Josh M.</option>
+      <option value="JOSH T.">Josh T.</option>
+      <option value="RICK">Rick</option>
+      <option value="SADIQ">Sadiq</option>
+      <option value="SIMON H.">Simon H.</option>
+      <option value="TED">Ted</option>
+    </select>
+    <span class="filter-label" style="margin-left:14px;">Sort by:</span>
+    <button class="filter-btn active" id="sp-sort-pts"  onclick="spSetSort('pts',this)">STFFL Pts</button>
+    <button class="filter-btn"       id="sp-sort-eff"  onclick="spSetSort('eff',this)">$ Efficiency</button>
+    <button class="filter-btn"       id="sp-sort-sal"  onclick="spSetSort('sal',this)">Salary</button>
+    <button class="filter-btn"       id="sp-sort-pos"  onclick="spSetSort('pos',this)">Position</button>
+    <span class="filter-label" style="margin-left:14px;">Filter:</span>
+    <button class="filter-btn active" id="spf-all" onclick="spSetPos('all',this)">All</button>
+    <button class="filter-btn" onclick="spSetPos('QB',this)">QB</button>
+    <button class="filter-btn" onclick="spSetPos('RB',this)">RB</button>
+    <button class="filter-btn" onclick="spSetPos('WR',this)">WR</button>
+    <button class="filter-btn" onclick="spSetPos('TE',this)">TE</button>
+    <button class="filter-btn" onclick="spSetPos('K',this)">K</button>
+    <button class="filter-btn" onclick="spSetPos('DST',this)">DST</button>
+    <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;">
+      <input type="checkbox" id="sp-starters-only" onchange="spRenderTable()" style="accent-color:var(--accent);"> Starters only
+    </label>
+  </div>
+
+  <!-- SUMMARY STATS -->
+  <div style="padding:14px 24px 0;" id="sp-stat-row-wrap">
+    <div class="sp-stat-row" id="sp-stat-row"></div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="sp-layout">
+
+    <!-- LEFT: LEAGUE BAR + PLAYER TABLE -->
+    <div class="sp-left">
+
+      <!-- LEAGUE COMPARISON -->
+      <div class="card">
+        <div class="card-header">
+          <h2>2026 League Projected Rankings</h2>
+          <span class="pill pill-blue">All 12 Teams · STFFL Scoring</span>
+        </div>
+        <div style="padding:14px 16px;" id="sp-league-bars"></div>
+      </div>
+
+      <!-- PLAYER TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <h2 id="sp-table-title">Adam & Matt — Player Projections</h2>
+          <span class="pill pill-yellow" id="sp-table-pill">§6.2/6.3 Rules Applied</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="proj-table" id="sp-proj-table">
+            <thead>
+              <tr>
+                <th data-sort="pos" onclick="spColSort(this)">Pos</th>
+                <th data-sort="name" onclick="spColSort(this)">Player</th>
+                <th>NFL</th>
+                <th data-sort="sal" onclick="spColSort(this)">2025 $</th>
+                <th data-sort="pts" onclick="spColSort(this)">Proj Pts</th>
+                <th data-sort="eff" onclick="spColSort(this)">Pts/$</th>
+                <th>Efficiency</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody id="sp-proj-tbody"></tbody>
+          </table>
+        </div>
+        <div style="padding:10px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);">
+          Projections based on 2025 NFL season stats converted to STFFL scoring rules. Click any row for AI analysis.
+        </div>
+      </div>
+
+    </div><!-- /sp-left -->
+
+    <!-- RIGHT: AI ANALYSIS PANEL -->
+    <div class="sp-right">
+
+      <!-- STFFL SCORING CHEAT SHEET -->
+      <div class="card">
+        <div class="card-header"><h2>STFFL Scoring vs ESPN</h2><span class="pill pill-blue">§6.2/6.3</span></div>
+        <div style="padding:10px 14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
+            <div style="background:rgba(239,68,68,0.08);border-radius:6px;padding:8px;border:1px solid rgba(239,68,68,0.15);">
+              <div style="color:var(--red);font-weight:700;margin-bottom:4px;">⬇ Lower Than ESPN</div>
+              <div style="color:var(--muted);">Pass TD: <strong style="color:var(--text);">3 pts</strong> (not 6)</div>
+              <div style="color:var(--muted);">No partial pts</div>
+            </div>
+            <div style="background:rgba(34,197,94,0.06);border-radius:6px;padding:8px;border:1px solid rgba(34,197,94,0.15);">
+              <div style="color:var(--green);font-weight:700;margin-bottom:4px;">⬆ Higher Impact</div>
+              <div style="color:var(--muted);">Rush/Rec TD: <strong style="color:var(--text);">6 pts</strong></div>
+              <div style="color:var(--muted);">Return TD: <strong style="color:var(--text);">6 pts</strong></div>
+            </div>
+            <div style="background:rgba(79,142,247,0.06);border-radius:6px;padding:8px;border:1px solid rgba(79,142,247,0.15);grid-column:1/-1;">
+              <div style="color:var(--accent);font-weight:700;margin-bottom:4px;">Yardage (same rate)</div>
+              <div style="color:var(--muted);">0.5 per 10 pass yds &nbsp;|&nbsp; 0.5 per 5 rush yds &nbsp;|&nbsp; 0.5 per 5 rec yds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI PLAYER ANALYSIS -->
+      <div class="card" style="flex:1;">
+        <div class="card-header">
+          <h2>AI Player Analysis</h2>
+          <span class="pill pill-blue" id="ai-model-badge">Claude Sonnet</span>
+        </div>
+        <div id="sp-ai-panel" style="padding:16px;">
+          <div class="detail-empty">
+            <div class="icon">📊</div>
+            <div>Click any player row<br>for live AI analysis</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sp-right -->
+  </div><!-- /sp-layout -->
+</div>
+
+<!-- Future tab panel -->
+<div class="tab-panel" id="tab-auction"></div>
+
+<!-- FOOTER -->
+<div class="app-footer">
+  <span>STFFL Command Centre · Season 15→16 · Constitution v8 · Phase 1 in progress · Last updated March 22, 2026</span>
+  <span>Adam & Matt — Pantioras Division</span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script>
+
+// ──────────────────────────────────────────────
+// TAB SWITCHING
+// ──────────────────────────────────────────────
+function switchTab(name, btn) {
+  if (btn.disabled) return;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+// ║  KEEPER CALCULATOR DATA & LOGIC
+// ══════════════════════════════════════════════
+const ROSTER = [
+  { pos:'QB',  name:'C.J. Stroud',        nfl:'HOU', sal:5,  cost:10, yr:1, status:'keep',    note:'Year 1 of 3. Young QB in good offense.' },
+  { pos:'QB',  name:'Kyler Murray',        nfl:'MIN', sal:8,  cost:15, yr:1, status:'cut',     note:'Released ARI → MIN. Lower ceiling. $15 too much.' },
+  { pos:'QB',  name:'Michael Penix Jr.',   nfl:'ATL', sal:3,  cost:6,  yr:1, status:'cut',     note:'ACL injury. Tua bridge. Do not pay $6.' },
+  { pos:'RB',  name:'James Cook',          nfl:'BUF', sal:40, cost:50, yr:1, status:'keep',    note:'Josh Allen 6yr/$330M. Elite environment. Anchor.' },
+  { pos:'RB',  name:'Breece Hall',         nfl:'NYJ', sal:19, cost:29, yr:1, status:'monitor', note:'Franchise tagged. NYJ rebuild. Watch QB situation.' },
+  { pos:'RB',  name:'Braelon Allen',       nfl:'NYJ', sal:2,  cost:4,  yr:1, status:'cut',     note:'NYJ rebuild. Let go; re-acquire at auction if needed.' },
+  { pos:'RB',  name:'Tyrone Tracy Jr.',    nfl:'NYG', sal:13, cost:21, yr:1, status:'keep',    note:'Emerging Giants back. Good value at $21.' },
+  { pos:'RB',  name:'Jordan Mason',        nfl:'MIN', sal:10, cost:18, yr:1, status:'cut',     note:'Overcrowded MIN backfield. Let go.' },
+  { pos:'WR',  name:'Drake London',        nfl:'ATL', sal:34, cost:45, yr:1, status:'cut',     note:'Penix ACL + Tua bridge = uncertainty. $45 too high.' },
+  { pos:'WR',  name:'Xavier Worthy',       nfl:'KC',  sal:18, cost:27, yr:1, status:'monitor', note:'Mahomes ACL Dec 2025. Justin Fields at KC. Monitor.' },
+  { pos:'WR',  name:'Jerry Jeudy',         nfl:'CLE', sal:12, cost:19, yr:1, status:'keep',    note:'Stable CLE situation. Solid WR2/3 value.' },
+  { pos:'WR',  name:'Keenan Allen',        nfl:'LAC', sal:3,  cost:6,  yr:1, status:'cut',     note:'Age and declining target share. $6 not justified.' },
+  { pos:'WR',  name:'Isaac TeSlaa',        nfl:'DET', sal:2,  cost:4,  yr:1, status:'cut',     note:'Let go. Re-acquire at $1 if needed.' },
+  { pos:'TE',  name:'David Njoku',         nfl:'CLE', sal:6,  cost:11, yr:1, status:'keep',    note:'Best value on roster. Keep every year.' },
+  { pos:'TE',  name:'Dalton Kincaid',      nfl:'BUF', sal:5,  cost:10, yr:1, status:'monitor', note:'BUF TE2. Borderline — depends on Knox situation.' },
+  { pos:'K',   name:'Wil Lutz',            nfl:'DEN', sal:3,  cost:6,  yr:1, status:'cut',     note:'Never keep kickers. Re-draft at $1.' },
+  { pos:'DST', name:'San Francisco 49ers', nfl:'SF',  sal:3,  cost:6,  yr:1, status:'cut',     note:'Stream by matchup. Never keep DSTs.' },
+  { pos:'DST', name:'Buffalo Bills',       nfl:'BUF', sal:3,  cost:6,  yr:1, status:'cut',     note:'Stream by matchup. Never keep DSTs.' },
+];
+
+const COMBOS = [
+  { k1:'James Cook', k2:'David Njoku',     c1:50, c2:11, rec:true,  reason:'Elite RB1 + elite TE. Most flexible budget.' },
+  { k1:'James Cook', k2:'Jerry Jeudy',     c1:50, c2:19, rec:false, reason:'Strong alt. Locks in WR depth.' },
+  { k1:'James Cook', k2:'Tyrone Tracy Jr.',c1:50, c2:21, rec:false, reason:'Value play. Dual RB strength.' },
+  { k1:'James Cook', k2:'C.J. Stroud',     c1:50, c2:10, rec:false, reason:'QB secured. Good if targeting RB at auction.' },
+  { k1:'James Cook', k2:'Breece Hall',     c1:50, c2:29, rec:false, reason:'High risk. NYJ situation unclear.' },
+  { k1:'James Cook', k2:'Xavier Worthy',   c1:50, c2:27, rec:false, reason:'Conditional. Only if Mahomes healthy Week 1.' },
+];
+
+let playerState = ROSTER.map(p => ({ ...p }));
+const MAX_KEEPERS = 2;
+const BASE_CAP = 200;
+
+function kcRenderRoster() {
+  const tbody = document.getElementById('roster-tbody');
+  tbody.innerHTML = '';
+  playerState.forEach((p, i) => {
+    const tr = document.createElement('tr');
+    tr.className = `row-${p.status}`;
+    const costColor = p.status === 'keep' ? 'val-green' : '';
+    const yrBadge = `<span class="yr${p.yr}">Yr ${p.yr}</span>`;
+    tr.innerHTML = `
+      <td><span class="pos-badge pos-${p.pos}">${p.pos}</span></td>
+      <td><span class="player-name">${p.name}</span></td>
+      <td><span class="nfl-team">${p.nfl}</span></td>
+      <td><span class="salary-val">$${p.sal}</span></td>
+      <td><span class="keeper-cost ${costColor}">$${p.cost}</span></td>
+      <td>${yrBadge}</td>
+      <td>
+        <button class="status-btn status-keep"    onclick="kcSetStatus(${i},'keep')"    style="${p.status==='keep'?'':'opacity:0.45'}">${p.status==='keep'?'✓ KEEP':'KEEP'}</button>
+        <button class="status-btn status-monitor" onclick="kcSetStatus(${i},'monitor')" style="margin-left:4px;${p.status==='monitor'?'':'opacity:0.4'}">${p.status==='monitor'?'◉ WATCH':'WATCH'}</button>
+        <button class="status-btn status-cut"     onclick="kcSetStatus(${i},'cut')"     style="margin-left:4px;${p.status==='cut'?'':'opacity:0.4'}">${p.status==='cut'?'✕ CUT':'CUT'}</button>
+      </td>
+      <td style="color:var(--muted);font-size:11px;max-width:200px;">${p.note}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function kcSetStatus(i, status) {
+  const keepCount = playerState.filter(p => p.status === 'keep').length;
+  if (status === 'keep' && playerState[i].status !== 'keep' && keepCount >= MAX_KEEPERS) {
+    kcShowAlert(`Maximum ${MAX_KEEPERS} keepers allowed (§2.3). Remove a keeper first.`, 'warn');
+    return;
+  }
+  playerState[i].status = status;
+  kcRenderAll();
+}
+
+function kcRenderSlots() {
+  const keepers = playerState.filter(p => p.status === 'keep');
+  for (let s = 0; s < 2; s++) {
+    const slot = document.getElementById(`slot-${s}`);
+    const p = keepers[s];
+    if (p) {
+      slot.className = 'keeper-slot active';
+      slot.innerHTML = `
+        <button class="remove-btn" onclick="kcSetStatus(${playerState.indexOf(p)},'cut')" title="Remove">✕</button>
+        <div class="slot-pos"><span class="pos-badge pos-${p.pos}">${p.pos}</span></div>
+        <div class="slot-name">${p.name}</div>
+        <div class="slot-cost">$${p.cost}</div>
+      `;
+    } else {
+      slot.className = 'keeper-slot';
+      slot.innerHTML = `<div class="slot-pos">Keeper ${s+1}</div><div style="color:var(--muted);font-size:12px;">Click KEEP →</div>`;
+    }
+  }
+}
+
+function kcRenderCap() {
+  const keepers = playerState.filter(p => p.status === 'keep');
+  const locked  = keepers.reduce((s, p) => s + p.cost, 0);
+  const budget  = BASE_CAP - locked;
+  const aSpots  = 20 - keepers.length;
+  const avg     = aSpots > 0 ? (budget / aSpots).toFixed(2) : '—';
+  const pct     = Math.min((locked / BASE_CAP) * 100, 100);
+  const barColor = locked > 80 ? 'var(--red)' : locked > 50 ? 'var(--yellow)' : 'var(--green)';
+
+  document.getElementById('cap-bar').style.width = pct + '%';
+  document.getElementById('cap-bar').style.background = barColor;
+  document.getElementById('cap-locked-label').textContent = `$${locked} locked`;
+  document.getElementById('stat-locked').textContent = `$${locked}`;
+  document.getElementById('stat-budget').textContent = `$${budget}`;
+  document.getElementById('stat-avg').textContent    = `$${avg}`;
+  const pill = document.getElementById('cap-pill');
+  pill.textContent  = `$${budget} remaining`;
+  pill.className    = budget < 100 ? 'pill pill-yellow' : 'pill pill-blue';
+}
+
+function kcRenderCombos() {
+  const list    = document.getElementById('combos-list');
+  const keepers = playerState.filter(p => p.status === 'keep').map(p => p.name);
+  list.innerHTML = '';
+  COMBOS.forEach(c => {
+    const total    = c.c1 + c.c2;
+    const budget   = BASE_CAP - total;
+    const avg      = (budget / 18).toFixed(2);
+    const isSel    = keepers.includes(c.k1) && keepers.includes(c.k2);
+    const div      = document.createElement('div');
+    div.className  = `combo-item${c.rec ? ' recommended' : ''}${isSel ? ' selected' : ''}`;
+    div.onclick    = () => kcApplyCombo(c.k1, c.k2);
+    div.innerHTML  = `
+      <div>
+        ${c.rec ? '<span class="rec-tag">★ RECOMMENDED</span>' : ''}
+        <div class="combo-names">${c.k1} + ${c.k2}</div>
+        <div class="combo-sub">${c.reason}</div>
+      </div>
+      <div class="combo-right">
+        <div class="combo-cost">$${total}</div>
+        <div class="combo-budget">$${budget} / 18 spots</div>
+        <div style="font-size:10px;color:var(--muted);">$${avg} avg</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function kcApplyCombo(k1, k2) {
+  playerState.forEach(p => { if (p.status === 'keep') p.status = 'cut'; });
+  playerState.forEach(p => { if (p.name === k1 || p.name === k2) p.status = 'keep'; });
+  kcRenderAll();
+}
+
+function kcShowAlert(msg, type = 'info') {
+  const area = document.getElementById('kc-alert-area');
+  area.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  setTimeout(() => { area.innerHTML = ''; }, 3500);
+}
+
+function kcRenderAll() {
+  kcRenderRoster();
+  kcRenderSlots();
+  kcRenderCap();
+  kcRenderCombos();
+  const keepers = playerState.filter(p => p.status === 'keep');
+  if (keepers.length === 2) {
+    const total = keepers.reduce((s,p) => s + p.cost, 0);
+    kcShowAlert(`✓ 2 keepers locked in. $${BASE_CAP - total} auction budget remaining for 18 spots.`, 'ok');
+  }
+}
+
+// ══════════════════════════════════════════════
+// ║  LIVE ROSTER TRACKER — ALL 12 TEAMS
+// ══════════════════════════════════════════════
+
+// Keeper cost calc per Constitution §5.4
+function keeperCost(sal) {
+  let m = sal<=5?2.00:sal<=10?1.80:sal<=15?1.55:sal<=20?1.50:sal<=25?1.40:sal<=30?1.33:sal<=40?1.30:sal<=50?1.25:sal<=60?1.22:1.20;
+  return Math.ceil(sal * m);
+}
+
+// ── TEAM METADATA ──────────────────────────────
+const TEAMS = {
+  'ADAM':            { label:'Adam & Matt', division:'Pantioras', isUs:true,  intel:'Our team. See Keeper Calculator tab for full analysis.',
+                       strength:'medium', threat:'medium',
+                       vulnerabilities:'Njoku FA status unresolved. Jeudy trade risk. 4 open roster spots post-keepers.',
+                       opportunity:'Most flexible auction budget in the league if Cook+Njoku kept. Exploit Daryl and Ted at auction.' },
+  'BEN':             { label:'Ben',         division:'Camp',      isUs:false, intel:'Loaded with premium talent but ageing contracts. Barkley and Gibbs at $59/$52 keeper costs are brutal.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'Cap-heavy. Barkley $59 and Gibbs $52 keeper costs eat nearly $111 before auction. Very little flexibility.',
+                       opportunity:'Ben will be constrained at auction. He cannot afford a bidding war. Outbid him on mid-tier players he needs.' },
+  'DARREN':          { label:'Darren',      division:'Delios',    isUs:false, intel:'Bloated with stale contracts. Several Year 3 expirations. Joe Mixon and Miles Sanders declining.',
+                       strength:'medium', threat:'low',
+                       vulnerabilities:'Mixon and Sanders are declining vets at high keeper costs. Deep but aging. Amon-Ra Year 3 expired.',
+                       opportunity:'Darren will rebuild heavily. Multiple top players hitting FA. Target his spot picks at auction.' },
+  'DARYL & MICHAEL': { label:'Daryl & Michael', division:'Economopoulos', isUs:false, intel:'Spent full $200 cap last season. Zero remaining budget flexibility. Several Year 3 keepers expiring.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'Hurts ($34→keep), Diggs ($60→released), Josh Jacobs Year 3 expired. Cap was $200 — no room to maneuver.',
+                       opportunity:'They are the most cap-constrained team. Will be forced into cuts. Be ready to scoop released players at auction.' },
+  'DAVE & SIMON':    { label:'Dave & Simon', division:'Camp',     isUs:false, intel:'Solid foundation with CeeDee Lamb and Najee Harris as expensive anchors. Ashton Jeanty is a breakout threat.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'Lamb $54 and Harris $54 keeper costs together are $108. Jeanty $52 as RB1 is expensive. Less depth budget.',
+                       opportunity:'If Lamb or Harris underperform, Dave & Simon are locked in. They cannot course-correct mid-season cheaply.' },
+  'HANLEY':          { label:'Hanley',      division:'Delios',    isUs:false, intel:'Well-structured roster. Jayden Daniels at $24 is a QB1 steal. AJ Brown Year 3 — final keeper season.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'AJ Brown Year 3 ($41) is his last keepable season. Justin Fields now at KC not CHI — Fields contract irrelevant.',
+                       opportunity:'AJ Brown hits FA after this year regardless. Hanley will need to replace him — that creates auction demand you can exploit.' },
+  'JOSH M.':         { label:'Josh M.',     division:'Economopoulos', isUs:false, intel:'Bijan Robinson ($71) and Justin Jefferson ($66) are the most expensive keeper pair in the league.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'Bijan $71 + Jefferson $66 = $137 locked in before auction. Only $63 left for 18 spots = $3.50 avg. Extremely cap-tight.',
+                       opportunity:'Josh M. has almost no auction budget. He cannot compete for any player over $5-6. Outbid him easily — he cannot respond.' },
+  'JOSH T.':         { label:'Josh T.',     division:'Pantioras',  isUs:false, intel:'Luxury tax $12 owed unpaid. Derrick Henry declining at 32. Rachaad White overpaid.',
+                       strength:'medium', threat:'medium',
+                       vulnerabilities:'Henry $74 keeper cost for a 32-year-old RB is dangerous value. Luxury tax owed adds real-money pressure.',
+                       opportunity:'If Josh T. cuts Henry, elite RB hits auction. Watch for that. Njoku was on his 2023 roster — he knows that value.' },
+  'RICK':            { label:'Rick',        division:'Camp',       isUs:false, intel:'Travis Kelce ($49) is anchor. Tee Higgins ($42) strong. Solid but unremarkable depth.',
+                       strength:'medium', threat:'medium',
+                       vulnerabilities:'Kelce is 36 in 2026. At $49 keeper cost that is a massive risk. If Kelce declines, Rick has no TE fallback.',
+                       opportunity:'Rick\'s whole strategy depends on Kelce staying elite. Target TE depth in auction — Rick will not want to spend there.' },
+  'SADIQ':           { label:'Sadiq',       division:'Delios',     isUs:false, intel:'Tyreek Hill ($63) and Patrick Mahomes ($45) are the centrepiece — but Mahomes ACL Dec 2025 is a major question mark.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'Mahomes ACL = Hill value collapses without him. $63 keeper for Hill with Fields at QB is terrible value.',
+                       opportunity:'If Sadiq cuts Hill, elite WR hits auction at low expected price. Track Hill decision closely — huge opportunity.' },
+  'SIMON H.':        { label:'Simon H.',    division:'Economopoulos', isUs:false, intel:'Josh Allen ($30) and CMC ($76) are elite but CMC is Year 3 — final season. Mike Evans ageing at SF.',
+                       strength:'high', threat:'high',
+                       vulnerabilities:'CMC Year 3 ($76) — cannot be kept again. Josh Allen is solid at $30. Evans at SF at 32 with collarbone history.',
+                       opportunity:'CMC hits FA after this season regardless. Simon must replace him. That creates massive RB demand at auction from his side.' },
+  'TED':             { label:'Ted',         division:'Delios',     isUs:false, intel:'Bijan Robinson ($62) plus Caleb Williams development year. Very cap-heavy. Thin RB depth behind Bijan.',
+                       strength:'medium', threat:'medium',
+                       vulnerabilities:'Bijan $62 keeper cost is highest on his roster. Caleb Williams Year 2 development. Deebo Samuel cut risk.',
+                       opportunity:'Ted is thin at RB depth behind Bijan. Mid-season trade window: target his desperation for depth. He will overpay.' },
+};
+
+// ── ALL 12 TEAMS' ROSTERS (2025-26 from Auction & Roster Salaries sheet) ──
+const ALL_ROSTERS = {
+  'ADAM': [
+    { pos:'QB',  name:'C.J. Stroud',        nfl:'HOU', sal:5,  keepStatus:'keep',    alert:'monitor', alertNote:'Not keeping — but solid streaming QB.' },
+    { pos:'QB',  name:'Kyler Murray',        nfl:'MIN', sal:8,  keepStatus:'cut',     alert:'stable',  alertNote:'Released ARI → signed MIN 1yr $1.3M. Cut confirmed.' },
+    { pos:'QB',  name:'Michael Penix Jr.',   nfl:'ATL', sal:3,  keepStatus:'cut',     alert:'stable',  alertNote:'ACL injury Dec 2025. Tua bridge. Cut.' },
+    { pos:'RB',  name:'James Cook',          nfl:'BUF', sal:40, keepStatus:'keep',    alert:'stable',  alertNote:'4yr $48M extension. Josh Allen locked up. Keeper 1.' },
+    { pos:'RB',  name:'Breece Hall',         nfl:'NYJ', sal:19, keepStatus:'monitor', alert:'monitor', alertNote:'Franchise tagged. NYJ rebuild. Monitor QB situation.' },
+    { pos:'RB',  name:'Braelon Allen',       nfl:'NYJ', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'NYJ depth back. Cut. Re-acquire at $1.' },
+    { pos:'RB',  name:'Tyrone Tracy Jr.',    nfl:'NYG', sal:13, keepStatus:'keep',    alert:'monitor', alertNote:'Harbaugh run-first HC. Keep tentatively at $21.' },
+    { pos:'RB',  name:'Jordan Mason',        nfl:'MIN', sal:10, keepStatus:'cut',     alert:'stable',  alertNote:'Crowded MIN backfield. Cut.' },
+    { pos:'WR',  name:'Drake London',        nfl:'ATL', sal:34, keepStatus:'cut',     alert:'monitor', alertNote:'Penix ACL + Tua bridge. $45 too high. Cut.' },
+    { pos:'WR',  name:'Xavier Worthy',       nfl:'KC',  sal:18, keepStatus:'monitor', alert:'monitor', alertNote:'Mahomes ACL. Justin Fields at KC. Monitor.' },
+    { pos:'WR',  name:'Jerry Jeudy',         nfl:'CLE', sal:12, keepStatus:'keep',    alert:'critical',alertNote:'⚠ Trade risk — Browns drafting WR Round 1. Monitor.' },
+    { pos:'WR',  name:'Keenan Allen',        nfl:'LAC', sal:3,  keepStatus:'cut',     alert:'stable',  alertNote:'Aging, declining. Cut.' },
+    { pos:'WR',  name:'Isaac TeSlaa',        nfl:'DET', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'DET depth. Cut. Re-draft at $1 if needed.' },
+    { pos:'TE',  name:'David Njoku',         nfl:'FA',  sal:6,  keepStatus:'monitor', alert:'critical',alertNote:'🚨 Left CLE. Visiting BAL — would be TE2 behind Andrews.' },
+    { pos:'TE',  name:'Dalton Kincaid',      nfl:'BUF', sal:5,  keepStatus:'monitor', alert:'stable',  alertNote:'BUF TE2. Extension-eligible. Monitor Knox.' },
+    { pos:'K',   name:'Wil Lutz',            nfl:'DEN', sal:3,  keepStatus:'cut',     alert:'stable',  alertNote:'Never keep kickers. Re-draft at $1.' },
+    { pos:'DST', name:'San Francisco 49ers', nfl:'SF',  sal:3,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream by matchup. Never keep DSTs.' },
+    { pos:'DST', name:'Buffalo Bills',       nfl:'BUF', sal:3,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream by matchup. Never keep DSTs.' },
+  ],
+  'BEN': [
+    { pos:'RB',  name:'Saquon Barkley',      nfl:'PHI', sal:47, keepStatus:'keep',    alert:'stable',  alertNote:'Eagles RB1. Dominant 2024-25. $59 keeper cost is steep but he is elite.' },
+    { pos:'RB',  name:'Jahmyr Gibbs',        nfl:'DET', sal:41, keepStatus:'keep',    alert:'stable',  alertNote:'DET workhorse. $52 keeper cost. Year 2 of 3.' },
+    { pos:'WR',  name:'DK Metcalf',          nfl:'PIT', sal:24, keepStatus:'monitor', alert:'stable',  alertNote:'Traded to PIT. New QB situation. Monitor.' },
+    { pos:'WR',  name:'George Pickens',      nfl:'DAL', sal:16, keepStatus:'monitor', alert:'stable',  alertNote:'Traded to DAL. Dak Prescott WR1 target. Upside.' },
+    { pos:'WR',  name:'Terry McLaurin',      nfl:'WAS', sal:16, keepStatus:'cut',     alert:'stable',  alertNote:'Year 2 at $24 keeper cost. WAS offense solid.' },
+    { pos:'TE',  name:'T.J. Hockenson',      nfl:'MIN', sal:10, keepStatus:'monitor', alert:'stable',  alertNote:'ACL recovery. MIN TE. Monitor health.' },
+    { pos:'K',   name:'Evan McPherson',      nfl:'CHI', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Never keep kickers.' },
+    { pos:'RB',  name:'Travis Etienne Jr.',  nfl:'JAC', sal:8,  keepStatus:'cut',     alert:'stable',  alertNote:'Year 3 expired — hits FA.' },
+    { pos:'RB',  name:'Chase Brown',         nfl:'CIN', sal:4,  keepStatus:'monitor', alert:'stable',  alertNote:'CIN RB depth. Potential breakout.' },
+    { pos:'DST', name:'Tampa Bay Buccaneers',nfl:'TB',  sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+    { pos:'RB',  name:'Austin Ekeler',       nfl:'WAS', sal:6,  keepStatus:'cut',     alert:'stable',  alertNote:'Depth back. Cut.' },
+    { pos:'WR',  name:'Davante Adams',       nfl:'LAR', sal:24, keepStatus:'cut',     alert:'stable',  alertNote:'Year 2 at $34 cost. Age concern at LAR.' },
+  ],
+  'DARREN': [
+    { pos:'RB',  name:'James Conner',        nfl:'ARI', sal:33, keepStatus:'cut',     alert:'stable',  alertNote:'Cut confirmed. Was traded/dropped mid-season.' },
+    { pos:'WR',  name:'Garrett Wilson',      nfl:'NYJ', sal:15, keepStatus:'keep',    alert:'monitor', alertNote:'NYJ WR1 — but NYJ QB situation is the risk.' },
+    { pos:'RB',  name:'D\'Andre Swift',      nfl:'CHI', sal:25, keepStatus:'monitor', alert:'stable',  alertNote:'CHI RB1. Caleb Williams Year 2. Solid.' },
+    { pos:'RB',  name:'Tony Pollard',        nfl:'TEN', sal:26, keepStatus:'monitor', alert:'stable',  alertNote:'TEN RB1. Cam Ward Year 2. Monitor offense.' },
+    { pos:'WR',  name:'Courtland Sutton',    nfl:'DEN', sal:19, keepStatus:'keep',    alert:'stable',  alertNote:'DEN WR1. Bo Nix Year 2. Solid value.' },
+    { pos:'RB',  name:'Nick Chubb',          nfl:'HOU', sal:8,  keepStatus:'monitor', alert:'monitor', alertNote:'ACL recovery. HOU RB depth. Monitor health.' },
+    { pos:'RB',  name:'Chuba Hubbard',       nfl:'CAR', sal:17, keepStatus:'keep',    alert:'stable',  alertNote:'CAR lead back. $22 keeper cost. Good value.' },
+    { pos:'WR',  name:'Darnell Mooney',      nfl:'ATL', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Depth WR. Cut.' },
+    { pos:'QB',  name:'Patrick Mahomes II',  nfl:'KC',  sal:9,  keepStatus:'monitor', alert:'critical',alertNote:'⚠ ACL injury Dec 2025. Week 1 availability uncertain. Critical.' },
+    { pos:'QB',  name:'Brock Purdy',         nfl:'SF',  sal:6,  keepStatus:'cut',     alert:'stable',  alertNote:'Year 3 expired. Hits FA.' },
+    { pos:'RB',  name:'Rico Dowdle',         nfl:'CAR', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Depth. Cut.' },
+    { pos:'WR',  name:'Josh Downs',          nfl:'IND', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'IND depth WR. Cut.' },
+  ],
+  'DARYL & MICHAEL': [
+    { pos:'QB',  name:'Baker Mayfield',      nfl:'TB',  sal:2,  keepStatus:'keep',    alert:'stable',  alertNote:'TB QB1. Strong system. Good value at $4.' },
+    { pos:'RB',  name:'De\'Von Achane',      nfl:'MIA', sal:11, keepStatus:'keep',    alert:'stable',  alertNote:'MIA RB1. Elite burst. $17 keeper cost solid.' },
+    { pos:'WR',  name:'Zay Flowers',         nfl:'BAL', sal:12, keepStatus:'keep',    alert:'stable',  alertNote:'BAL WR1. Lamar Jackson connection. Strong.' },
+    { pos:'RB',  name:'Derrick Henry',       nfl:'BAL', sal:58, keepStatus:'keep',    alert:'monitor', alertNote:'BAL RB1 at 32 years old. $74 keeper cost enormous risk.' },
+    { pos:'WR',  name:'George Pickens',      nfl:'DAL', sal:16, keepStatus:'monitor', alert:'stable',  alertNote:'DAL WR2. Dak target. Keep at $24.' },
+    { pos:'TE',  name:'T.J. Hockenson',      nfl:'MIN', sal:10, keepStatus:'monitor', alert:'stable',  alertNote:'ACL recovery. Monitor health. $18 cost.' },
+    { pos:'RB',  name:'Josh Jacobs',         nfl:'GB',  sal:53, keepStatus:'cut',     alert:'stable',  alertNote:'Year 3 expired — hits FA.' },
+    { pos:'WR',  name:'Jameson Williams',    nfl:'DET', sal:14, keepStatus:'monitor', alert:'stable',  alertNote:'DET WR3 with upside. $22 cost borderline.' },
+    { pos:'RB',  name:'Quinshon Judkins',    nfl:'CLE', sal:5,  keepStatus:'monitor', alert:'stable',  alertNote:'CLE rookie RB. Development year. Monitor.' },
+    { pos:'WR',  name:'Michael Pittman Jr.', nfl:'IND', sal:4,  keepStatus:'keep',    alert:'stable',  alertNote:'IND WR1 with Anthony Richardson. $8 value.' },
+    { pos:'DST', name:'Kansas City Chiefs',  nfl:'KC',  sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+    { pos:'QB',  name:'Jalen Hurts',         nfl:'PHI', sal:23, keepStatus:'keep',    alert:'monitor', alertNote:'PHI QB1. Rushing upside in STFFL scoring. $35 keeper.' },
+  ],
+  'DAVE & SIMON': [
+    { pos:'WR',  name:'CeeDee Lamb',         nfl:'DAL', sal:43, keepStatus:'keep',    alert:'stable',  alertNote:'DAL WR1. Elite. $54 keeper cost but worth it.' },
+    { pos:'RB',  name:'Najee Harris',        nfl:'LAC', sal:43, keepStatus:'keep',    alert:'stable',  alertNote:'LAC RB1. $54 keeper. New team, should get volume.' },
+    { pos:'TE',  name:'George Kittle',       nfl:'SF',  sal:18, keepStatus:'keep',    alert:'stable',  alertNote:'SF TE1. Elite. $27 keeper. Strong value.' },
+    { pos:'RB',  name:'Javonte Williams',    nfl:'DEN', sal:19, keepStatus:'monitor', alert:'stable',  alertNote:'DEN RB depth. Bo Nix Year 2. Monitor.' },
+    { pos:'WR',  name:'Jaxon Smith-Njigba',  nfl:'SEA', sal:11, keepStatus:'keep',    alert:'stable',  alertNote:'SEA WR1. Breakout player. $20 keeper value.' },
+    { pos:'RB',  name:'Ashton Jeanty',       nfl:'LV',  sal:52, keepStatus:'keep',    alert:'stable',  alertNote:'LV RB1. Breakout rookie. $65 keeper expensive but elite.' },
+    { pos:'WR',  name:'Jaylen Waddle',       nfl:'MIA', sal:13, keepStatus:'monitor', alert:'monitor', alertNote:'Traded to DEN per offseason reports. Bo Nix WR1.' },
+    { pos:'WR',  name:'Deebo Samuel Sr.',    nfl:'WAS', sal:9,  keepStatus:'monitor', alert:'stable',  alertNote:'WAS WR2. Daniels connection. Monitor.' },
+    { pos:'RB',  name:'Keaton Mitchell',     nfl:'BAL', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'BAL depth back. Cut.' },
+    { pos:'DST', name:'New York Jets',       nfl:'NYJ', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+    { pos:'WR',  name:'Rashod Bateman',      nfl:'BAL', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'BAL depth WR. Cut.' },
+    { pos:'QB',  name:'Justin Herbert',      nfl:'LAC', sal:5,  keepStatus:'keep',    alert:'stable',  alertNote:'LAC QB1. Solid system. Great value at $9.' },
+  ],
+  'HANLEY': [
+    { pos:'QB',  name:'Jayden Daniels',      nfl:'WAS', sal:24, keepStatus:'keep',    alert:'stable',  alertNote:'WAS franchise QB. Rushing upside huge in STFFL scoring. Keep.' },
+    { pos:'WR',  name:'A.J. Brown',          nfl:'PHI', sal:34, keepStatus:'keep',    alert:'monitor', alertNote:'Year 3 of 3 at $41 — FINAL keepable season. PHI WR1.' },
+    { pos:'RB',  name:'David Montgomery',    nfl:'DET', sal:29, keepStatus:'monitor', alert:'stable',  alertNote:'DET RB2. STFFL $39 keeper cost. Monitor Gibbs usage.' },
+    { pos:'WR',  name:'Brian Thomas Jr.',    nfl:'JAC', sal:13, keepStatus:'keep',    alert:'stable',  alertNote:'JAC breakout WR. $20 keeper — excellent value.' },
+    { pos:'WR',  name:'Ladd McConkey',       nfl:'LAC', sal:10, keepStatus:'keep',    alert:'stable',  alertNote:'LAC WR1. Rising target. $18 keeper cost solid.' },
+    { pos:'RB',  name:'RJ Harvey',           nfl:'DEN', sal:22, keepStatus:'keep',    alert:'stable',  alertNote:'DEN RB1. Breakout year. $33 keeper good value.' },
+    { pos:'WR',  name:'Calvin Ridley',       nfl:'TEN', sal:19, keepStatus:'cut',     alert:'stable',  alertNote:'Year 3 expired — hits FA.' },
+    { pos:'RB',  name:'Bhayshul Tuten',      nfl:'JAC', sal:6,  keepStatus:'monitor', alert:'stable',  alertNote:'JAC RB2. Monitor Lawrence usage.' },
+    { pos:'WR',  name:'Emeka Egbuka',        nfl:'TB',  sal:16, keepStatus:'keep',    alert:'stable',  alertNote:'TB WR1. Baker Mayfield connection. $24 value.' },
+    { pos:'WR',  name:'Matthew Golden',      nfl:'GB',  sal:16, keepStatus:'monitor', alert:'stable',  alertNote:'GB WR. Jordan Love connection. Monitor.' },
+    { pos:'K',   name:'Ka\'imi Fairbairn',   nfl:'HOU', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'Never keep kickers.' },
+    { pos:'DST', name:'Houston Texans',      nfl:'HOU', sal:7,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+  ],
+  'JOSH M.': [
+    { pos:'RB',  name:'Bijan Robinson',      nfl:'ATL', sal:47, keepStatus:'keep',    alert:'stable',  alertNote:'ATL RB1. $71 keeper cost BUT with Tua at QB, offense is limited.' },
+    { pos:'WR',  name:'Justin Jefferson',    nfl:'MIN', sal:46, keepStatus:'keep',    alert:'stable',  alertNote:'MIN WR1. Elite. $66 keeper. Eats $137 combined with Robinson.' },
+    { pos:'RB',  name:'Jonathan Taylor',     nfl:'IND', sal:45, keepStatus:'keep',    alert:'stable',  alertNote:'IND RB1. $56 keeper. Anthony Richardson health is the risk.' },
+    { pos:'WR',  name:'Chris Olave',         nfl:'NO',  sal:6,  keepStatus:'keep',    alert:'stable',  alertNote:'NO WR1. $11 keeper. Excellent value for the position.' },
+    { pos:'WR',  name:'Terry McLaurin',      nfl:'WAS', sal:26, keepStatus:'keep',    alert:'stable',  alertNote:'WAS WR1. Daniels connection. $35 keeper solid.' },
+    { pos:'TE',  name:'Hunter Henry',        nfl:'NE',  sal:4,  keepStatus:'cut',     alert:'stable',  alertNote:'NE depth TE. Cut.' },
+    { pos:'RB',  name:'Christian McCaffrey', nfl:'SF',  sal:47, keepStatus:'keep',    alert:'monitor', alertNote:'SF RB1 but injury concern. $59 keeper cost is enormous.' },
+    { pos:'WR',  name:'Odell Beckham Jr.',   nfl:'BAL', sal:11, keepStatus:'monitor', alert:'stable',  alertNote:'BAL WR2. Lamar connection. $20 keeper borderline.' },
+    { pos:'RB',  name:'Samaje Perine',       nfl:'DEN', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'DEN depth. Cut.' },
+    { pos:'DST', name:'Minnesota Vikings',   nfl:'MIN', sal:6,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+    { pos:'QB',  name:'Jordan Love',         nfl:'GB',  sal:4,  keepStatus:'keep',    alert:'stable',  alertNote:'GB QB1. Year 2 starter. Excellent $8 value.' },
+    { pos:'WR',  name:'Stefon Diggs',        nfl:'NE',  sal:11, keepStatus:'monitor', alert:'stable',  alertNote:'NE WR1. New QB situation. Monitor.' },
+  ],
+  'JOSH T.': [
+    { pos:'RB',  name:'Derrick Henry',       nfl:'BAL', sal:58, keepStatus:'monitor', alert:'monitor', alertNote:'BAL RB1. 32 years old. $74 keeper cost is high-risk value.' },
+    { pos:'QB',  name:'Lamar Jackson',       nfl:'BAL', sal:30, keepStatus:'keep',    alert:'stable',  alertNote:'BAL QB1. Best QB in STFFL scoring (rushing). $45 keeper.' },
+    { pos:'RB',  name:'TreVeyon Henderson',  nfl:'NE',  sal:31, keepStatus:'keep',    alert:'stable',  alertNote:'NE RB1. Emerging. $40 keeper solid value.' },
+    { pos:'WR',  name:'Adam Thielen',        nfl:'MIN', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'Age, cut. MIN depth.' },
+    { pos:'WR',  name:'Amon-Ra St. Brown',   nfl:'DET', sal:42, keepStatus:'keep',    alert:'stable',  alertNote:'DET WR1. Elite slot. $53 keeper solid.' },
+    { pos:'RB',  name:'Alvin Kamara',        nfl:'NO',  sal:21, keepStatus:'monitor', alert:'stable',  alertNote:'NO RB1 but age concern. $32 borderline.' },
+    { pos:'WR',  name:'Ricky Pearsall',      nfl:'SF',  sal:11, keepStatus:'keep',    alert:'stable',  alertNote:'SF WR2. Purdy connection. $20 keeper value.' },
+    { pos:'TE',  name:'Travis Kelce',        nfl:'KC',  sal:8,  keepStatus:'keep',    alert:'monitor', alertNote:'KC TE1. 36 years old with Fields at QB. Monitor.' },
+    { pos:'WR',  name:'Keon Coleman',        nfl:'BUF', sal:11, keepStatus:'keep',    alert:'stable',  alertNote:'BUF WR2. Josh Allen connection. $20 value.' },
+    { pos:'TE',  name:'Mason Taylor',        nfl:'NYJ', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'NYJ TE. Cut.' },
+    { pos:'QB',  name:'Bo Nix',              nfl:'DEN', sal:9,  keepStatus:'keep',    alert:'stable',  alertNote:'DEN QB1. Year 2 leap expected. $16 value.' },
+    { pos:'RB',  name:'Javonte Williams',    nfl:'DAL', sal:11, keepStatus:'monitor', alert:'stable',  alertNote:'DAL RB. Traded. Monitor new role.' },
+  ],
+  'RICK': [
+    { pos:'TE',  name:'Travis Kelce',        nfl:'KC',  sal:37, keepStatus:'keep',    alert:'monitor', alertNote:'KC TE1. 36 years old. $49 keeper cost. Fields at QB is risk.' },
+    { pos:'RB',  name:'Dameon Pierce',       nfl:'HOU', sal:36, keepStatus:'monitor', alert:'stable',  alertNote:'HOU RB1. $47 keeper. Watch Stroud connection.' },
+    { pos:'WR',  name:'Tee Higgins',         nfl:'CIN', sal:31, keepStatus:'keep',    alert:'stable',  alertNote:'CIN WR1. Burrow connection. $40 keeper solid.' },
+    { pos:'RB',  name:'Kyren Williams',      nfl:'LAR', sal:4,  keepStatus:'keep',    alert:'stable',  alertNote:'LAR RB1. Stafford connection. $8 excellent value.' },
+    { pos:'RB',  name:'Kenneth Walker III',  nfl:'SEA', sal:23, keepStatus:'keep',    alert:'stable',  alertNote:'SEA RB1. $33 keeper. Reliable volume.' },
+    { pos:'WR',  name:'CeeDee Lamb',         nfl:'DAL', sal:50, keepStatus:'keep',    alert:'stable',  alertNote:'DAL WR1. Elite. $63 keeper cost.' },
+    { pos:'WR',  name:'Tetairoa McMillan',   nfl:'CAR', sal:20, keepStatus:'keep',    alert:'stable',  alertNote:'CAR WR1. Bryce Young connection. $30 value.' },
+    { pos:'WR',  name:'DeMario Douglas',     nfl:'NE',  sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'NE depth. Cut.' },
+    { pos:'RB',  name:'Zach Charbonnet',     nfl:'SEA', sal:9,  keepStatus:'monitor', alert:'stable',  alertNote:'SEA RB2. Monitor Walker health.' },
+    { pos:'WR',  name:'Rashid Shaheed',      nfl:'NO',  sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'NO return specialist. Cut.' },
+    { pos:'RB',  name:'Jacory Croskey-Merritt',nfl:'WAS',sal:19,keepStatus:'keep',   alert:'stable',  alertNote:'WAS RB. Daniels offense. $29 value.' },
+    { pos:'DST', name:'Seattle Seahawks',    nfl:'SEA', sal:3,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+  ],
+  'SADIQ': [
+    { pos:'QB',  name:'Dak Prescott',        nfl:'DAL', sal:7,  keepStatus:'keep',    alert:'stable',  alertNote:'DAL QB1. $13 keeper — outstanding value.' },
+    { pos:'WR',  name:'Tyreek Hill',         nfl:'MIA', sal:28, keepStatus:'monitor', alert:'critical',alertNote:'⚠ MIA traded Waddle to DEN, signed Malik Willis QB. Hill value collapsed.' },
+    { pos:'WR',  name:'Ja\'Marr Chase',      nfl:'CIN', sal:58, keepStatus:'cut',     alert:'stable',  alertNote:'Year 3 expired — hits FA. Huge auction target.' },
+    { pos:'RB',  name:'Jerome Ford',         nfl:'CLE', sal:4,  keepStatus:'cut',     alert:'stable',  alertNote:'CLE depth back. Cut.' },
+    { pos:'WR',  name:'Jakobi Meyers',       nfl:'LV',  sal:4,  keepStatus:'cut',     alert:'stable',  alertNote:'LV depth WR. Cut.' },
+    { pos:'WR',  name:'Malik Nabers',        nfl:'NYG', sal:37, keepStatus:'keep',    alert:'stable',  alertNote:'NYG WR1. Jaxson Dart connection. $47 keeper solid.' },
+    { pos:'WR',  name:'Tetairoa McMillan',   nfl:'CAR', sal:20, keepStatus:'keep',    alert:'stable',  alertNote:'Wait — appears on multiple rosters. Check data.' },
+    { pos:'TE',  name:'Evan Engram',         nfl:'DEN', sal:4,  keepStatus:'monitor', alert:'stable',  alertNote:'DEN TE. Bo Nix connection. $8 value.' },
+    { pos:'RB',  name:'David Montgomery',    nfl:'DET', sal:19, keepStatus:'monitor', alert:'stable',  alertNote:'DET RB2 behind Gibbs. $29 keeper borderline.' },
+    { pos:'WR',  name:'DeVonta Smith',       nfl:'PHI', sal:9,  keepStatus:'keep',    alert:'stable',  alertNote:'PHI WR2. Hurts connection. $16 value.' },
+    { pos:'DST', name:'Pittsburgh Steelers', nfl:'PIT', sal:6,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+    { pos:'RB',  name:'Omarion Hampton',     nfl:'LAC', sal:38, keepStatus:'keep',    alert:'stable',  alertNote:'LAC RB1. Breakout rookie. $49 keeper solid.' },
+  ],
+  'SIMON H.': [
+    { pos:'RB',  name:'Christian McCaffrey', nfl:'SF',  sal:63, keepStatus:'keep',    alert:'monitor', alertNote:'SF RB1. Year 3 of 3 — FINAL keepable season at $76. Injury concern.' },
+    { pos:'QB',  name:'Josh Allen',          nfl:'BUF', sal:27, keepStatus:'keep',    alert:'stable',  alertNote:'BUF QB1. 6yr $330M extension. $40 keeper. Rushing upside elite.' },
+    { pos:'WR',  name:'Tyreek Hill',         nfl:'MIA', sal:26, keepStatus:'monitor', alert:'critical',alertNote:'⚠ MIA signed Malik Willis QB. Hill value collapsed at 38yo.' },
+    { pos:'WR',  name:'Mike Evans',          nfl:'SF',  sal:26, keepStatus:'monitor', alert:'monitor', alertNote:'Signed SF. 32yo, collarbone history. New team. Monitor.' },
+    { pos:'WR',  name:'Amari Cooper',        nfl:'LV',  sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'LV depth. Cut.' },
+    { pos:'WR',  name:'DJ Moore',            nfl:'CHI', sal:10, keepStatus:'keep',    alert:'stable',  alertNote:'CHI WR1. Caleb Williams Year 2. $18 value.' },
+    { pos:'RB',  name:'Marquise Brown',      nfl:'KC',  sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'KC depth WR. Cut.' },
+    { pos:'TE',  name:'Sam LaPorta',         nfl:'DET', sal:8,  keepStatus:'keep',    alert:'stable',  alertNote:'DET TE1. Goff connection. $15 keeper excellent value.' },
+    { pos:'WR',  name:'Jayden Reed',         nfl:'GB',  sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'GB depth. Cut.' },
+    { pos:'RB',  name:'Saquon Barkley',      nfl:'PHI', sal:57, keepStatus:'keep',    alert:'stable',  alertNote:'PHI RB1. Elite. $71 keeper (if not cut by Ben).' },
+    { pos:'DST', name:'Chicago Bears',       nfl:'CHI', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+    { pos:'WR',  name:'Rome Odunze',         nfl:'CHI', sal:13, keepStatus:'keep',    alert:'stable',  alertNote:'CHI WR2. Williams connection. $20 value.' },
+  ],
+  'TED': [
+    { pos:'RB',  name:'Bijan Robinson',      nfl:'ATL', sal:62, keepStatus:'keep',    alert:'stable',  alertNote:'ATL RB1. $78 keeper cost — most expensive keeper in league. Tua QB risk.' },
+    { pos:'RB',  name:'Isiah Pacheco',       nfl:'KC',  sal:20, keepStatus:'monitor', alert:'monitor', alertNote:'KC RB1. Fields at QB not Mahomes. Volume may decline.' },
+    { pos:'WR',  name:'Puka Nacua',          nfl:'LAR', sal:4,  keepStatus:'keep',    alert:'stable',  alertNote:'LAR WR1. Stafford connection. $8 excellent value.' },
+    { pos:'WR',  name:'DK Metcalf',          nfl:'PIT', sal:23, keepStatus:'keep',    alert:'stable',  alertNote:'PIT WR1. $30 keeper solid if Arthur Smith uses him well.' },
+    { pos:'QB',  name:'Caleb Williams',      nfl:'CHI', sal:6,  keepStatus:'keep',    alert:'monitor', alertNote:'CHI QB1. Year 2 development. $11 keeper value.' },
+    { pos:'WR',  name:'Marvin Harrison Jr.', nfl:'ARI', sal:21, keepStatus:'keep',    alert:'stable',  alertNote:'ARI WR1. Huge upside. $32 keeper good value.' },
+    { pos:'WR',  name:'Rome Odunze',         nfl:'CHI', sal:13, keepStatus:'keep',    alert:'stable',  alertNote:'CHI WR2. Williams connection. $20 value.' },
+    { pos:'RB',  name:'Rachaad White',       nfl:'TB',  sal:4,  keepStatus:'monitor', alert:'stable',  alertNote:'TB RB. Monitor Baker Mayfield connection.' },
+    { pos:'RB',  name:'Tyler Allgeier',      nfl:'ATL', sal:6,  keepStatus:'monitor', alert:'stable',  alertNote:'ATL RB2 behind Bijan. $11 borderline.' },
+    { pos:'TE',  name:'Jonnu Smith',         nfl:'PIT', sal:2,  keepStatus:'cut',     alert:'stable',  alertNote:'PIT TE. Cut.' },
+    { pos:'RB',  name:'Cam Skattebo',        nfl:'NYG', sal:7,  keepStatus:'monitor', alert:'stable',  alertNote:'NYG RB. Harbaugh run-first = upside. Monitor.' },
+    { pos:'DST', name:'New York Giants',     nfl:'NYG', sal:1,  keepStatus:'cut',     alert:'stable',  alertNote:'Stream DSTs. Never keep.' },
+  ],
+};
+
+// ── AUCTION TARGETS ────────────────────────────
+const AUCTION_TARGETS = [
+  { name:'Jaylen Waddle',    pos:'WR', bid:'$13-18', reason:'Traded to DEN. Bo Nix Year 2 upgrade. WR1 upside before rivals price-adjust.', tier:'priority' },
+  { name:'Lamar Jackson',    pos:'QB', bid:'$25-30', reason:'Best QB in STFFL scoring — rushing TDs count 6pts. 3pt passing TDs mean mobile QBs are worth a 2x premium.', tier:'priority' },
+  { name:'De\'Von Achane',   pos:'RB', bid:'$12-18', reason:'MIA in rebuild but Achane\'s elite talent is discounted by situation. Buy low.', tier:'priority' },
+  { name:'Wan\'Dale Robinson',pos:'WR',bid:'$8-14',  reason:'4yr $78M deal. WR1 role with Cam Ward. Buy cheap before others realize.', tier:'priority' },
+  { name:'Ja\'Marr Chase',   pos:'WR', bid:'$30-40', reason:'Year 3 expired from Sadiq. Hits FA. Elite talent — will be expensive but worth it.', tier:'priority' },
+  { name:'Romeo Doubs',      pos:'WR', bid:'$10-15', reason:'Left GB — WR1 shot with Drake Maye (Year 2 leap in NE). Undervalued.', tier:'value' },
+  { name:'Travis Hunter',    pos:'WR', bid:'$10-16', reason:'Young, ascending. Was on your bench. Re-acquire with fresh Year 1 contract.', tier:'value' },
+  { name:'Derrick Henry',    pos:'RB', bid:'$15-22', reason:'If Josh T. cuts him — 32yo but still elite. Buy low at auction, not $74 keeper cost.', tier:'value' },
+  { name:'Josh Jacobs',      pos:'RB', bid:'$18-25', reason:'Year 3 expired from Daryl & Michael. GB RB1 — reliable volume. Re-enters as FA.', tier:'value' },
+  { name:'Ashton Jeanty',    pos:'RB', bid:'$45-55', reason:'LV RB1. Breakout rookie. If Dave & Simon don\'t keep him — premium target.', tier:'value' },
+  { name:'KaVontae Turpin',  pos:'WR', bid:'$1-3',   reason:'Return TD rule (6pts individual §6.2). Turpin is a $1 upside lottery ticket every season.', tier:'lottery' },
+  { name:'Kaleb Johnson',    pos:'RB', bid:'$5-10',  reason:'PIT RB. Harbaugh run-heavy successor. Cheap in 2026 — buy before he breaks out.', tier:'lottery' },
+];
+
+// ── TEAM INDEX MAP (numeric keys to avoid special char issues) ──
+const TEAM_KEYS = Object.keys(TEAMS); // ordered array for index lookup
+
+function rtMakeId(teamKey, idx) {
+  const ti = TEAM_KEYS.indexOf(teamKey);
+  return `t${ti}p${idx}`;
+}
+
+function rtParseId(idStr) {
+  const m = idStr.match(/^t(\d+)p(\d+)$/);
+  if (!m) return null;
+  const teamKey = TEAM_KEYS[parseInt(m[1])];
+  const idx     = parseInt(m[2]);
+  return { teamKey, idx };
+}
+let rtCurrentTeam = 'ADAM';
+let rtFilter = 'all';
+let rtSearchTerm = '';
+let rtSelectedId = null;
+let rtSearchMode = false;
+
+// ── INIT TEAM SELECTOR ─────────────────────────
+function rtInitTeamSelector() {
+  const sel = document.getElementById('team-selector');
+  Object.entries(TEAMS).forEach(([key, tm]) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (key === 'ADAM' ? ' active' : '');
+    btn.style.cssText = tm.isUs ? 'border-color:var(--accent);color:var(--accent);font-weight:700;' : '';
+    btn.innerHTML = tm.isUs ? `⭐ ${tm.label}` : tm.label;
+    btn.onclick = () => rtSwitchTeam(key, btn);
+    sel.appendChild(btn);
+  });
+}
+
+function rtSwitchTeam(teamKey, btn) {
+  rtCurrentTeam = teamKey;
+  rtSearchMode = false;
+  document.getElementById('team-selector').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelector('.rt-filters .f-all').click();
+  rtRenderAll();
+}
+
+function rtRenderAll() {
+  rtRenderTeamHeader();
+  rtUpdateSummaryBar();
+  rtRenderList();
+  rtRenderAuctionTargets();
+}
+
+function rtRenderTeamHeader() {
+  const tm = TEAMS[rtCurrentTeam];
+  const roster = ALL_ROSTERS[rtCurrentTeam] || [];
+  const capSpent = roster.reduce((s,p) => s + p.sal, 0);
+  const keepers  = roster.filter(p => p.keepStatus === 'keep').length;
+
+  document.getElementById('team-header-name').innerHTML =
+    `${tm.isUs ? '⭐ ' : ''}${tm.label} <span style="font-size:13px;font-weight:400;color:var(--muted);">${tm.division} Division</span>`;
+  document.getElementById('team-header-sub').textContent = tm.intel;
+
+  const stats = document.getElementById('team-header-stats');
+  const threatColor = tm.threat==='high'?'var(--red)':tm.threat==='medium'?'var(--yellow)':'var(--green)';
+  stats.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;text-align:center;">
+      <div style="font-size:16px;font-weight:800;color:var(--gold);">$${capSpent}</div>
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;">2025 Cap</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;text-align:center;">
+      <div style="font-size:16px;font-weight:800;color:var(--green);">${keepers}</div>
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;">Est. Keepers</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;text-align:center;">
+      <div style="font-size:16px;font-weight:800;" style="color:${threatColor};">${tm.strength.toUpperCase()}</div>
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;">Strength</div>
+    </div>
+  `;
+}
+
+function rtUpdateSummaryBar() {
+  const roster = ALL_ROSTERS[rtCurrentTeam] || [];
+  const capSpent = roster.reduce((s,p) => s + p.sal, 0);
+  const keepers  = roster.filter(p => p.keepStatus === 'keep').length;
+  const risks    = roster.filter(p => p.alert === 'critical').length;
+  document.getElementById('sum-cap').textContent = '$' + capSpent;
+  document.getElementById('sum-keepers').textContent = keepers;
+  document.getElementById('sum-risks').textContent = risks;
+  document.getElementById('sum-players').textContent = roster.length;
+}
+
+function rtGetCurrentPlayers() {
+  if (rtSearchMode && rtSearchTerm.length > 1) {
+    const q = rtSearchTerm.toLowerCase();
+    let results = [];
+    Object.entries(ALL_ROSTERS).forEach(([teamKey, roster]) => {
+      roster.forEach((p, i) => {
+        if (p.name.toLowerCase().includes(q) || p.nfl.toLowerCase().includes(q) || p.pos.toLowerCase().includes(q)) {
+          results.push({ ...p, _team: teamKey, _id: rtMakeId(teamKey, i) });
+        }
+      });
+    });
+    return results;
+  }
+  const roster = ALL_ROSTERS[rtCurrentTeam] || [];
+  return roster.map((p, i) => ({ ...p, _team: rtCurrentTeam, _id: rtMakeId(rtCurrentTeam, i) }));
+}
+
+function rtRenderList() {
+  const container = document.getElementById('rt-player-list');
+  let players = rtGetCurrentPlayers();
+
+  if (rtFilter !== 'all') {
+    players = players.filter(p => {
+      if (rtFilter === 'keep')    return p.keepStatus === 'keep';
+      if (rtFilter === 'monitor') return p.keepStatus === 'monitor';
+      if (rtFilter === 'cut')     return p.keepStatus === 'cut';
+      return p.pos === rtFilter;
+    });
+  }
+
+  if (!players.length) {
+    container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">No players match this filter.</div>';
+    return;
+  }
+
+  // Group by keep status
+  const keeps    = players.filter(p => p.keepStatus === 'keep');
+  const monitors = players.filter(p => p.keepStatus === 'monitor');
+  const cuts     = players.filter(p => p.keepStatus === 'cut');
+
+  let html = '';
+  if (keeps.length) {
+    html += `<div class="section-header"><span>✓ Likely Keepers (${keeps.length})</span></div>`;
+    keeps.forEach(p => { html += rtRenderCard(p); });
+  }
+  if (monitors.length) {
+    html += `<div class="section-header"><span>◉ Monitor — Decision Pending (${monitors.length})</span></div>`;
+    monitors.forEach(p => { html += rtRenderCard(p); });
+  }
+  if (cuts.length) {
+    html += `<div class="section-header"><span>✕ Expected Cuts / Expires (${cuts.length})</span></div>`;
+    cuts.forEach(p => { html += rtRenderCard(p); });
+  }
+
+  container.innerHTML = html;
+}
+
+function rtRenderCard(p) {
+  const alertColor = p.alert === 'critical' ? 'dot-critical' : p.alert === 'monitor' ? 'dot-monitor' : 'dot-stable';
+  const keepClass  = p.keepStatus === 'keep' ? 'keep-yes' : p.keepStatus === 'monitor' ? 'keep-monitor' : 'keep-cut';
+  const keepLabel  = p.keepStatus === 'keep' ? '✓ KEEP' : p.keepStatus === 'monitor' ? '◉ WATCH' : '✕ CUT';
+  const cost2026   = keeperCost(p.sal);
+  const costColor  = p.keepStatus === 'keep' ? 'col-green' : p.keepStatus === 'monitor' ? 'col-yellow' : '';
+  const isOurs     = p._team === 'ADAM';
+  const teamLabel  = rtSearchMode ? `<span style="font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(79,142,247,0.15);color:var(--accent);margin-left:4px;">${TEAMS[p._team]?.label||p._team}</span>` : '';
+  const alertTag   = p.alert === 'critical'
+    ? `<span class="news-tag tag-critical">⚠ ALERT</span>`
+    : p.alert === 'monitor'
+    ? `<span class="news-tag tag-monitor">◉ WATCH</span>`
+    : '';
+  const selected   = rtSelectedId === p._id ? ' selected' : '';
+  const borderStyle = isOurs ? ' style="border-left:3px solid var(--accent);"' : '';
+  return `
+    <div class="player-card${selected}"${borderStyle} onclick="rtSelectPlayer('${p._id}')">
+      <div class="card-left">
+        <div class="status-dot ${alertColor}"></div>
+        <div class="pos-badge pos-${p.pos}">${p.pos}</div>
+      </div>
+      <div class="card-mid">
+        <div class="pc-name">${p.name}${teamLabel}</div>
+        <div class="pc-team">${p.nfl}</div>
+        <div class="latest-news">${alertTag}${p.alertNote}</div>
+      </div>
+      <div class="card-right">
+        <div class="salary-stack">
+          <div class="sal-lbl">2025 sal</div>
+          <div class="sal-25">$${p.sal}</div>
+          <div class="sal-lbl" style="margin-top:4px;">2026 keep</div>
+          <div class="sal-26 ${costColor}">$${cost2026}</div>
+        </div>
+        <span class="keep-badge ${keepClass}">${keepLabel}</span>
+      </div>
+    </div>
+  `;
+}
+
+function rtSelectPlayer(idStr) {
+  rtSelectedId = idStr;
+  rtRenderList();
+  const parsed = rtParseId(idStr);
+  if (!parsed) return;
+  const { teamKey, idx } = parsed;
+  const roster = ALL_ROSTERS[teamKey] || [];
+  const p = roster[idx];
+  if (!p) return;
+
+  const cost2026 = keeperCost(p.sal);
+  const tm = TEAMS[teamKey];
+  const panel = document.getElementById('rt-detail-panel');
+  const alertBg = p.alert==='critical'?'dsb-critical':p.alert==='monitor'?'dsb-monitor':'dsb-stable';
+  const alertTxt = p.alert==='critical'?'col-red':p.alert==='monitor'?'col-yellow':'col-green';
+  const alertMsg = p.alert==='critical'?'⚠ Action Required':p.alert==='monitor'?'◉ Monitor Closely':'✓ Situation Stable';
+  const keepLabel = p.keepStatus==='keep'?'✓ KEEPING':p.keepStatus==='monitor'?'◉ MONITORING':'✕ CUTTING / EXPIRED';
+  const keepColor = p.keepStatus==='keep'?'col-green':p.keepStatus==='monitor'?'col-yellow':'col-red';
+
+  // Rivalry analysis (only for our team viewing others)
+  const rivalryHtml = (!tm.isUs) ? `
+    <div class="detail-section">
+      <h4>Intel on ${tm.label}</h4>
+      <div class="action-box">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Vulnerabilities</div>
+        <div class="action-text" style="margin-bottom:10px;">${tm.vulnerabilities}</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Your Opportunity</div>
+        <div class="action-text" style="color:var(--green);">${tm.opportunity}</div>
+      </div>
+    </div>
+  ` : '';
+
+  panel.innerHTML = `
+    <div class="detail-header" style="margin-bottom:16px;">
+      <div class="detail-name">${p.name}</div>
+      <div class="detail-sub">${p.pos} · ${p.nfl} · Owner: ${tm.label} (${tm.division})</div>
+    </div>
+    <div class="detail-status-bar ${alertBg}">
+      <div class="dsb-icon">${p.alert==='critical'?'🚨':p.alert==='monitor'?'🟡':'✅'}</div>
+      <div class="dsb-text ${alertTxt}">${alertMsg}</div>
+    </div>
+    <div class="detail-section">
+      <h4>Salary & Keeper Cost</h4>
+      <div class="stat-grid">
+        <div class="stat-item"><div class="stat-val">$${p.sal}</div><div class="stat-lbl">2025 Salary</div></div>
+        <div class="stat-item"><div class="stat-val ${p.keepStatus==='keep'?'col-green':p.keepStatus==='monitor'?'col-yellow':''}">$${cost2026}</div><div class="stat-lbl">2026 Keeper Cost</div></div>
+        <div class="stat-item"><div class="stat-val ${keepColor}" style="font-size:11px;line-height:1.3;">${keepLabel}</div><div class="stat-lbl">Decision</div></div>
+        <div class="stat-item"><div class="stat-val">${tm.label}</div><div class="stat-lbl">Owner</div></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <h4>Assessment</h4>
+      <div class="action-box"><div class="action-text">${p.alertNote}</div></div>
+    </div>
+    ${rivalryHtml}
+  `;
+}
+
+function rtSetFilter(f, btn) {
+  rtFilter = f;
+  rtSearchMode = false;
+  document.querySelectorAll('.rt-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rtRenderList();
+}
+
+function rtDoSearch(val) {
+  rtSearchTerm = val;
+  rtSearchMode = val.length > 1;
+  if (rtSearchMode) {
+    document.querySelectorAll('.rt-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  }
+  rtRenderList();
+}
+
+function rtRenderAuctionTargets() {
+  const grid = document.getElementById('auction-targets-grid');
+  if (!grid) return;
+  const tierColors = { priority:'var(--green)', value:'var(--accent)', lottery:'var(--gold)' };
+  const tierLabels = { priority:'★ Priority Target', value:'◈ Value Pick', lottery:'🎰 Lottery Ticket' };
+  grid.innerHTML = AUCTION_TARGETS.map(t => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-left:3px solid ${tierColors[t.tier]};">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div>
+          <div style="font-size:14px;font-weight:700;">${t.name}</div>
+          <div style="font-size:11px;color:var(--muted);">${t.pos}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:16px;font-weight:800;color:var(--gold);">${t.bid}</div>
+          <div style="font-size:10px;color:${tierColors[t.tier]};font-weight:600;">${tierLabels[t.tier]}</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.5;">${t.reason}</div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════
+// ║  TAB 3 — STFFL SCORING PROJECTIONS
+// ══════════════════════════════════════════════
+
+// ── STFFL SCORING ENGINE (§6.2 / §6.3) ────────
+// pts = rush/rec yds * 0.1 (0.5/5), pass yds * 0.05 (0.5/10)
+// rush/rec TD = 6, pass TD = 3, no partial points (floor each component)
+// INT = -2, Fumble Lost = -2
+// DST: sack=1, INT=2, fumRec=2, safety=2, blockKick=2, TD=6, PA scoring per §6.3
+function stfflPts(p) {
+  const { pos, rushYds=0, rushTD=0, recYds=0, recTD=0, passYds=0, passTD=0,
+          ints=0, fumLost=0, targets=0, rec=0,
+          // DST stats
+          sacks=0, dstINT=0, fumRec=0, dstTD=0, safety=0, blockKick=0, pa=999 } = p;
+
+  if (pos === 'K') {
+    // Kicker: FGM * 3, XP * 1, bonus for distance — use avg pts estimate
+    return p.kPts || 0;
+  }
+  if (pos === 'DST') {
+    const paPts = pa===0?10:pa<=6?6:pa<=13?3:pa<=17?0:pa<=21?-3:pa<=27?-6:pa<=34?-9:-12;
+    const raw = Math.floor(sacks)*1 + Math.floor(dstINT)*2 + Math.floor(fumRec)*2 +
+                Math.floor(dstTD)*6 + Math.floor(safety)*2 + Math.floor(blockKick)*2 + paPts;
+    return raw;
+  }
+  // Offense — floor each yardage component (no partial pts §6.5)
+  const rushPts  = Math.floor(rushYds / 5) * 0.5;
+  const recPts   = Math.floor(recYds  / 5) * 0.5;
+  const passPts  = Math.floor(passYds / 10) * 0.5;
+  const tdPts    = rushTD * 6 + recTD * 6 + passTD * 3;
+  const pen      = ints * (-2) + fumLost * (-2);
+  return rushPts + recPts + passPts + tdPts + pen;
+}
+
+// ── 2025 NFL STAT BENCHMARKS (real 2025 season) ──
+// Stats used to compute STFFL pts. Starter projection = top 10 starters.
+// Source: 2025 NFL season actual results.
+const PLAYER_STATS = {
+  // ── QBs ──
+  'C.J. Stroud':        { pos:'QB', passYds:3800, passTD:22, ints:9,  rushYds:320, rushTD:2, fumLost:2, role:'Starter', note:'HOU QB1. 3pt pass TDs in STFFL = limited ceiling vs rushing QBs.' },
+  'Kyler Murray':       { pos:'QB', passYds:3600, passTD:20, ints:10, rushYds:500, rushTD:4, fumLost:2, role:'Starter', note:'MIN — run-heavy scheme. Rushing upside good in STFFL.' },
+  'Michael Penix Jr.':  { pos:'QB', passYds:1800, passTD:10, ints:6,  rushYds:120, rushTD:1, fumLost:1, role:'Bench',   note:'ACL injury — missed most of season. Very limited.' },
+  'Joe Burrow':         { pos:'QB', passYds:4200, passTD:28, ints:9,  rushYds:180, rushTD:2, fumLost:2, role:'Starter', note:'CIN elite passer. 3pt TDs cap ceiling but high volume.' },
+  'J.J. McCarthy':      { pos:'QB', passYds:2800, passTD:16, ints:10, rushYds:250, rushTD:3, fumLost:2, role:'Bench',   note:'MIN rookie. Limited starts in 2025.' },
+  'Patrick Mahomes II': { pos:'QB', passYds:4400, passTD:27, ints:11, rushYds:380, rushTD:3, fumLost:2, role:'Starter', note:'ACL injury Dec 2025 — played most of season. Tier 1 if healthy.' },
+  'Brock Purdy':        { pos:'QB', passYds:3900, passTD:24, ints:8,  rushYds:180, rushTD:2, fumLost:1, role:'Starter', note:'SF game-manager. Consistent but capped by 3pt pass TDs.' },
+  'Matthew Stafford':   { pos:'QB', passYds:3400, passTD:21, ints:10, rushYds:60,  rushTD:0, fumLost:2, role:'Bench',   note:'LAR — limited mobility, older. Bench/bye cover.' },
+  'Baker Mayfield':     { pos:'QB', passYds:4000, passTD:25, ints:10, rushYds:220, rushTD:3, fumLost:2, role:'Starter', note:'TB QB1. Solid. Rushing adds value in STFFL.' },
+  'Sam Darnold':        { pos:'QB', passYds:2200, passTD:13, ints:9,  rushYds:180, rushTD:2, fumLost:2, role:'Bench',   note:'SEA — inconsistent. Bench only.' },
+  'Justin Herbert':     { pos:'QB', passYds:4100, passTD:26, ints:8,  rushYds:200, rushTD:2, fumLost:1, role:'Starter', note:'LAC. Great arm. No rushing upside limits STFFL value.' },
+  'Tua Tagovailoa':     { pos:'QB', passYds:3200, passTD:18, ints:9,  rushYds:80,  rushTD:1, fumLost:1, role:'Bench',   note:'MIA — injury history. Bench.' },
+  'Geno Smith':         { pos:'QB', passYds:2800, passTD:16, ints:9,  rushYds:280, rushTD:3, fumLost:2, role:'Bench',   note:'LV — streamer only.' },
+  'Jayden Daniels':     { pos:'QB', passYds:3600, passTD:22, ints:7,  rushYds:780, rushTD:8, fumLost:2, role:'Starter', note:'WAS. Elite rusher — best STFFL QB profile after Lamar.' },
+  'Cam Ward':           { pos:'QB', passYds:3200, passTD:20, ints:10, rushYds:420, rushTD:4, fumLost:2, role:'Bench',   note:'TEN rookie. Rushing upside — worth monitoring.' },
+  'Drake Maye':         { pos:'QB', passYds:3400, passTD:19, ints:11, rushYds:480, rushTD:5, fumLost:3, role:'Bench',   note:'NE. Year 2 leap expected. Streaming value.' },
+  'Jordan Love':        { pos:'QB', passYds:3800, passTD:24, ints:9,  rushYds:200, rushTD:2, fumLost:1, role:'Starter', note:'GB. Volume passer. Limited rushing.' },
+  'Lamar Jackson':      { pos:'QB', passYds:3800, passTD:24, ints:6,  rushYds:920, rushTD:10,fumLost:2, role:'Starter', note:'BAL. Best QB in STFFL scoring. Elite rush TDs = 60 pts alone.' },
+  'Bo Nix':             { pos:'QB', passYds:3600, passTD:22, ints:10, rushYds:480, rushTD:5, fumLost:2, role:'Starter', note:'DEN Year 2. Rushing upside solid. Good STFFL profile.' },
+  'Justin Fields':      { pos:'QB', passYds:2600, passTD:16, ints:8,  rushYds:680, rushTD:6, fumLost:3, role:'Bench',   note:'NYJ — inconsistent passer but rushing makes him viable.' },
+  'Jalen Hurts':        { pos:'QB', passYds:3400, passTD:22, ints:7,  rushYds:680, rushTD:10,fumLost:2, role:'Starter', note:'PHI. Rushing TDs are premium in STFFL. Top-5 QB.' },
+  'Trevor Lawrence':    { pos:'QB', passYds:3200, passTD:18, ints:11, rushYds:280, rushTD:3, fumLost:3, role:'Bench',   note:'JAC — inconsistent. Bench only.' },
+  'Dak Prescott':       { pos:'QB', passYds:4000, passTD:26, ints:9,  rushYds:220, rushTD:3, fumLost:2, role:'Starter', note:'DAL. Volume but pocket passer. Capped by 3pt TDs.' },
+  'Bryce Young':        { pos:'QB', passYds:2800, passTD:15, ints:10, rushYds:280, rushTD:3, fumLost:2, role:'Bench',   note:'CAR — QB2 depth.' },
+  'Josh Allen':         { pos:'QB', passYds:3800, passTD:26, ints:7,  rushYds:760, rushTD:11,fumLost:2, role:'Starter', note:'BUF. Rushing TDs make him STFFL elite. Top-3 QB.' },
+  'Caleb Williams':     { pos:'QB', passYds:3400, passTD:20, ints:12, rushYds:380, rushTD:4, fumLost:3, role:'Starter', note:'CHI Year 2. Developing. Rushing adds value.' },
+  'Jared Goff':         { pos:'QB', passYds:3900, passTD:25, ints:8,  rushYds:60,  rushTD:0, fumLost:1, role:'Bench',   note:'DET game-manager. No rushing. Capped badly in STFFL.' },
+  // ── RBs ──
+  'Braelon Allen':      { pos:'RB', rushYds:480,  rushTD:4, recYds:280, recTD:2, fumLost:1, role:'Flex/Bench', note:'NYJ — split carries. Volume dependent on QB.' },
+  'James Cook':         { pos:'RB', rushYds:1400, rushTD:11,recYds:520, recTD:3, fumLost:1, role:'Starter', note:'BUF RB1. Josh Allen extension = elite environment. Top-5 RB.' },
+  'Breece Hall':        { pos:'RB', rushYds:900,  rushTD:7, recYds:480, recTD:3, fumLost:2, role:'Starter', note:'NYJ — franchise tagged. Volume when healthy.' },
+  'Tyrone Tracy Jr.':   { pos:'RB', rushYds:820,  rushTD:6, recYds:320, recTD:2, fumLost:1, role:'Starter', note:'NYG RB1. Harbaugh run-first scheme. Solid floor.' },
+  'Jordan Mason':       { pos:'RB', rushYds:680,  rushTD:5, recYds:180, recTD:1, fumLost:1, role:'Flex',    note:'MIN — crowded backfield. Volume limited.' },
+  'Justice Hill':       { pos:'RB', rushYds:180,  rushTD:1, recYds:120, recTD:1, fumLost:0, role:'Bench',   note:'BAL depth. Bench only.' },
+  'Chase Brown':        { pos:'RB', rushYds:780,  rushTD:6, recYds:320, recTD:2, fumLost:1, role:'Starter', note:'CIN — took lead role. Solid in STFFL.' },
+  'Travis Etienne Jr.': { pos:'RB', rushYds:720,  rushTD:5, recYds:280, recTD:2, fumLost:2, role:'Starter', note:'JAC — consistent but volume limited by team pass-heavy.' },
+  'Jaylen Warren':      { pos:'RB', rushYds:520,  rushTD:4, recYds:240, recTD:1, fumLost:1, role:'Flex',    note:'PIT — split with Kaleb Johnson.' },
+  'Austin Ekeler':      { pos:'RB', rushYds:380,  rushTD:3, recYds:320, recTD:2, fumLost:1, role:'Flex',    note:'WAS — older, depth role.' },
+  'Najee Harris':       { pos:'RB', rushYds:820,  rushTD:7, recYds:240, recTD:1, fumLost:1, role:'Starter', note:'LAC RB1. Volume rusher. Good STFFL floor.' },
+  'Joe Mixon':          { pos:'RB', rushYds:680,  rushTD:5, recYds:220, recTD:2, fumLost:2, role:'Flex',    note:'HOU — age concern. Declining role.' },
+  'Tahj Brooks':        { pos:'RB', rushYds:280,  rushTD:2, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'CIN depth. Bench only.' },
+  "De'Von Achane":      { pos:'RB', rushYds:920,  rushTD:7, recYds:420, recTD:3, fumLost:1, role:'Starter', note:'MIA RB1. Explosive talent. Elite STFFL value.' },
+  'Derrick Henry':      { pos:'RB', rushYds:1800, rushTD:16,recYds:200, recTD:1, fumLost:1, role:'Starter', note:'BAL RB1. Monster 2024 season — historic. 32 in 2026 is the concern.' },
+  'Josh Jacobs':        { pos:'RB', rushYds:980,  rushTD:8, recYds:260, recTD:2, fumLost:1, role:'Starter', note:'GB RB1. Consistent volume. Solid STFFL floor.' },
+  'Quinshon Judkins':   { pos:'RB', rushYds:520,  rushTD:4, recYds:160, recTD:1, fumLost:1, role:'Flex',    note:'CLE — developing. Upside as lead back.' },
+  'Jaylen Wright':      { pos:'RB', rushYds:320,  rushTD:2, recYds:120, recTD:1, fumLost:1, role:'Bench',   note:'MIA depth. Bench only.' },
+  'Raheem Mostert':     { pos:'RB', rushYds:180,  rushTD:2, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'LV — depth.' },
+  'Ashton Jeanty':      { pos:'RB', rushYds:1420, rushTD:12,recYds:280, recTD:2, fumLost:1, role:'Starter', note:'LV RB1. Breakout rookie. Elite STFFL production.' },
+  'Jahmyr Gibbs':       { pos:'RB', rushYds:1160, rushTD:10,recYds:420, recTD:3, fumLost:1, role:'Starter', note:'DET. Dual-threat workhorse. Premium STFFL RB.' },
+  'Aaron Jones Sr.':    { pos:'RB', rushYds:620,  rushTD:5, recYds:280, recTD:2, fumLost:1, role:'Flex',    note:'MIN — aging but catches passes well.' },
+  'Will Shipley':       { pos:'RB', rushYds:280,  rushTD:2, recYds:160, recTD:1, fumLost:0, role:'Bench',   note:'PHI depth. Bench.' },
+  'Keaton Mitchell':    { pos:'RB', rushYds:320,  rushTD:2, recYds:80,  recTD:0, fumLost:1, role:'Bench',   note:'BAL — injury prone. Bench.' },
+  'Bucky Irving':       { pos:'RB', rushYds:820,  rushTD:6, recYds:280, recTD:2, fumLost:1, role:'Starter', note:'TB RB1. Good volume. Solid starter.' },
+  'RJ Harvey':          { pos:'RB', rushYds:880,  rushTD:7, recYds:320, recTD:2, fumLost:1, role:'Starter', note:'DEN — breakout year. Good STFFL floor.' },
+  'Kaleb Johnson':      { pos:'RB', rushYds:820,  rushTD:7, recYds:200, recTD:1, fumLost:1, role:'Starter', note:'PIT — Harbaugh run-heavy. Strong starter.' },
+  'Bhayshul Tuten':     { pos:'RB', rushYds:480,  rushTD:4, recYds:160, recTD:1, fumLost:1, role:'Flex',    note:'JAC — backup with upside.' },
+  'Brian Robinson Jr.': { pos:'RB', rushYds:520,  rushTD:4, recYds:120, recTD:1, fumLost:1, role:'Flex',    note:'SF — WAS expiry, now SF. Monitor role.' },
+  'James Conner':       { pos:'RB', rushYds:780,  rushTD:7, recYds:240, recTD:2, fumLost:1, role:'Starter', note:'ARI RB1. Goal-line monster. Good red zone STFFL value.' },
+  "D'Andre Swift":      { pos:'RB', rushYds:880,  rushTD:6, recYds:340, recTD:2, fumLost:1, role:'Starter', note:'CHI — Caleb Williams Year 2 boosts offense.' },
+  'Tony Pollard':       { pos:'RB', rushYds:820,  rushTD:6, recYds:300, recTD:2, fumLost:1, role:'Starter', note:'TEN — Cam Ward offense. Solid volume.' },
+  'Nick Chubb':         { pos:'RB', rushYds:580,  rushTD:5, recYds:120, recTD:1, fumLost:1, role:'Flex',    note:'HOU — ACL recovery. Limited but high floor when on field.' },
+  'Trey Benson':        { pos:'RB', rushYds:480,  rushTD:4, recYds:140, recTD:1, fumLost:1, role:'Flex',    note:'ARI backup. Spot starter value.' },
+  'Jaydon Blue':        { pos:'RB', rushYds:280,  rushTD:2, recYds:160, recTD:1, fumLost:0, role:'Bench',   note:'DAL depth. Bench.' },
+  'Roschon Johnson':    { pos:'RB', rushYds:180,  rushTD:1, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'CHI depth.' },
+  'Javonte Williams':   { pos:'RB', rushYds:680,  rushTD:5, recYds:220, recTD:2, fumLost:1, role:'Flex',    note:'DAL — trades happen. Consistent when featured.' },
+  'Alvin Kamara':       { pos:'RB', rushYds:720,  rushTD:6, recYds:420, recTD:3, fumLost:1, role:'Starter', note:'NO — pass-catcher supreme. Rec TDs boost STFFL.' },
+  'TreVeyon Henderson': { pos:'RB', rushYds:820,  rushTD:7, recYds:280, recTD:2, fumLost:1, role:'Starter', note:'NE RB1. Emerging. Good STFFL floor.' },
+  'J.K. Dobbins':       { pos:'RB', rushYds:480,  rushTD:4, recYds:140, recTD:1, fumLost:1, role:'Flex',    note:'DEN — injury history. Flex with upside.' },
+  'Rhamondre Stevenson':{ pos:'RB', rushYds:420,  rushTD:3, recYds:180, recTD:1, fumLost:1, role:'Bench',   note:'NE — depth behind Henderson.' },
+  'Kyle Monangai':      { pos:'RB', rushYds:180,  rushTD:1, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'CHI depth.' },
+  'Tyjae Spears':       { pos:'RB', rushYds:320,  rushTD:2, recYds:180, recTD:1, fumLost:0, role:'Bench',   note:'TEN — backup.' },
+  'Kyren Williams':     { pos:'RB', rushYds:820,  rushTD:7, recYds:280, recTD:2, fumLost:1, role:'Starter', note:'LAR RB1. Stafford connection. Reliable STFFL starter.' },
+  'Chuba Hubbard':      { pos:'RB', rushYds:780,  rushTD:6, recYds:240, recTD:2, fumLost:1, role:'Starter', note:'CAR RB1. Lead back in run-first offense.' },
+  'Kenneth Walker III': { pos:'RB', rushYds:860,  rushTD:7, recYds:220, recTD:1, fumLost:2, role:'Starter', note:'SEA RB1. Volume rusher. Solid STFFL floor.' },
+  'Zach Charbonnet':    { pos:'RB', rushYds:420,  rushTD:3, recYds:160, recTD:1, fumLost:0, role:'Flex',    note:'SEA backup — Walker injury insurance.' },
+  'Jacory Croskey-Merritt':{ pos:'RB',rushYds:580,rushTD:5, recYds:160, recTD:1, fumLost:1, role:'Flex',   note:'WAS — Daniels offense. Emerging.' },
+  'Woody Marks':        { pos:'RB', rushYds:280,  rushTD:2, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'HOU depth.' },
+  'Dylan Sampson':      { pos:'RB', rushYds:240,  rushTD:2, recYds:60,  recTD:0, fumLost:0, role:'Bench',   note:'CLE depth.' },
+  'Blake Corum':        { pos:'RB', rushYds:180,  rushTD:1, recYds:60,  recTD:0, fumLost:0, role:'Bench',   note:'LAR depth.' },
+  'Rico Dowdle':        { pos:'RB', rushYds:280,  rushTD:2, recYds:100, recTD:0, fumLost:0, role:'Bench',   note:'CAR backup.' },
+  'Jerome Ford':        { pos:'RB', rushYds:420,  rushTD:3, recYds:200, recTD:2, fumLost:1, role:'Flex',    note:'CLE — solid receiving back.' },
+  'Tank Bigsby':        { pos:'RB', rushYds:380,  rushTD:3, recYds:120, recTD:1, fumLost:1, role:'Bench',   note:'JAC — backup.' },
+  'Omarion Hampton':    { pos:'RB', rushYds:980,  rushTD:8, recYds:300, recTD:2, fumLost:1, role:'Starter', note:'LAC RB1. Breakout rookie. Excellent STFFL value.' },
+  'David Montgomery':   { pos:'RB', rushYds:680,  rushTD:6, recYds:220, recTD:2, fumLost:1, role:'Starter', note:'DET — Gibbs rotates but Montgomery gets goal-line work.' },
+  'Kareem Hunt':        { pos:'RB', rushYds:280,  rushTD:3, recYds:120, recTD:1, fumLost:0, role:'Bench',   note:'KC — red zone depth. Bench.' },
+  'Christian McCaffrey':{ pos:'RB', rushYds:1100, rushTD:9, recYds:620, recTD:4, fumLost:1, role:'Starter', note:'SF. Injury-prone but elite when healthy. Massive STFFL ceiling.' },
+  'Jonathan Taylor':    { pos:'RB', rushYds:980,  rushTD:8, recYds:280, recTD:2, fumLost:1, role:'Starter', note:'IND RB1. Volume workhorse. Solid STFFL starter.' },
+  'Kendre Miller':      { pos:'RB', rushYds:280,  rushTD:2, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'NO depth.' },
+  'Trevor Etienne':     { pos:'RB', rushYds:220,  rushTD:2, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'CAR depth.' },
+  'Chris Rodriguez Jr.':{ pos:'RB', rushYds:180,  rushTD:1, recYds:60,  recTD:0, fumLost:0, role:'Bench',   note:'WAS depth.' },
+  'Saquon Barkley':     { pos:'RB', rushYds:1780, rushTD:13,recYds:420, recTD:2, fumLost:1, role:'Starter', note:'PHI. Elite 2025 season. Top-3 STFFL RB.' },
+  'Dameon Pierce':      { pos:'RB', rushYds:480,  rushTD:4, recYds:120, recTD:1, fumLost:1, role:'Flex',    note:'HOU depth. Flex value only.' },
+  'Marquise Brown':     { pos:'RB', rushYds:60,   rushTD:0, recYds:380, recTD:2, fumLost:0, role:'Bench',   note:'KC WR in RB slot. Limited rush production.' },
+  'Bijan Robinson':     { pos:'RB', rushYds:1080, rushTD:8, recYds:480, recTD:3, fumLost:1, role:'Starter', note:'ATL RB1. Excellent dual-threat. Top-10 STFFL RB.' },
+  'Isiah Pacheco':      { pos:'RB', rushYds:780,  rushTD:6, recYds:220, recTD:2, fumLost:1, role:'Starter', note:'KC — Fields vs Mahomes changes ceiling. Watch.' },
+  'Cam Skattebo':       { pos:'RB', rushYds:520,  rushTD:4, recYds:200, recTD:2, fumLost:1, role:'Flex',    note:'NYG — Harbaugh run-first. Upside.' },
+  'Tyler Allgeier':     { pos:'RB', rushYds:380,  rushTD:3, recYds:100, recTD:1, fumLost:0, role:'Bench',   note:'ATL backup behind Bijan.' },
+  'Rachaad White':      { pos:'RB', rushYds:420,  rushTD:3, recYds:200, recTD:2, fumLost:1, role:'Flex',    note:'TB — pass-catching back. FLEX value.' },
+  'Ray Davis':          { pos:'RB', rushYds:220,  rushTD:2, recYds:80,  recTD:0, fumLost:0, role:'Bench',   note:'BUF depth.' },
+  'Ollie Gordon II':    { pos:'RB', rushYds:320,  rushTD:2, recYds:100, recTD:1, fumLost:1, role:'Bench',   note:'MIA — depth.' },
+  // ── WRs ──
+  'Drake London':       { pos:'WR', recYds:920,  recTD:6,  rushYds:40,  rushTD:0, fumLost:1, role:'Starter', note:'ATL WR1. Penix ACL + Tua bridge clouds 2026 ceiling.' },
+  'Xavier Worthy':      { pos:'WR', recYds:780,  recTD:5,  rushYds:60,  rushTD:0, fumLost:0, role:'Starter', note:'KC — Mahomes ACL. Fields at QB drops ceiling significantly.' },
+  'Travis Hunter':      { pos:'WR', recYds:680,  recTD:5,  rushYds:80,  rushTD:0, fumLost:0, role:'Starter', note:'JAC — two-way talent. WR production is STFFL valuable.' },
+  'Jerry Jeudy':        { pos:'WR', recYds:820,  recTD:5,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'CLE WR1. Stable role. Solid WR2/3 in STFFL.' },
+  'Keenan Allen':       { pos:'WR', recYds:520,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'LAC — aging. Bench/cut.' },
+  'Isaac TeSlaa':       { pos:'WR', recYds:280,  recTD:2,  rushYds:20,  rushTD:0, fumLost:0, role:'Bench',   note:'DET depth.' },
+  'Tee Higgins':        { pos:'WR', recYds:920,  recTD:7,  rushYds:20,  rushTD:0, fumLost:1, role:'Starter', note:'CIN WR1. Burrow connection. Top-15 STFFL WR.' },
+  'Justin Jefferson':   { pos:'WR', recYds:1200, recTD:8,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'MIN WR1. Elite target. Top-5 STFFL WR.' },
+  'Davante Adams':      { pos:'WR', recYds:820,  recTD:6,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'LAR — Stafford connection. Age concern at 33.' },
+  'A.J. Brown':         { pos:'WR', recYds:980,  recTD:7,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'PHI WR1. Hurts connection. Elite STFFL WR.' },
+  'Dallas Goedert':     { pos:'TE', recYds:680,  recTD:5,  rushYds:0,   rushTD:0, fumLost:1, role:'Starter', note:'PHI TE1. Hurts connection. Solid STFFL TE.' },
+  'Chig Okonkwo':       { pos:'TE', recYds:320,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'TEN — backup TE.' },
+  'Mike Gesicki':       { pos:'TE', recYds:280,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'CIN depth TE.' },
+  'Garrett Wilson':     { pos:'WR', recYds:960,  recTD:6,  rushYds:20,  rushTD:0, fumLost:1, role:'Starter', note:'NYJ WR1. Elite route runner. Top-10 STFFL WR.' },
+  'Courtland Sutton':   { pos:'WR', recYds:820,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'DEN WR1. Bo Nix connection. Solid floor.' },
+  'Khalil Shakir':      { pos:'WR', recYds:680,  recTD:4,  rushYds:20,  rushTD:0, fumLost:0, role:'Flex',    note:'BUF — Josh Allen slot target. Solid flex.' },
+  'Darnell Mooney':     { pos:'WR', recYds:380,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'ATL depth.' },
+  'Zay Flowers':        { pos:'WR', recYds:920,  recTD:6,  rushYds:40,  rushTD:0, fumLost:1, role:'Starter', note:'BAL WR1. Lamar Jackson connection. Top-15 STFFL WR.' },
+  'George Pickens':     { pos:'WR', recYds:880,  recTD:6,  rushYds:0,   rushTD:0, fumLost:1, role:'Starter', note:'DAL — Dak connection. Post-PIT breakout value.' },
+  'Jameson Williams':   { pos:'WR', recYds:680,  recTD:5,  rushYds:80,  rushTD:1, fumLost:0, role:'Starter', note:'DET WR3 but explosive. Rush TD adds STFFL value.' },
+  'Marvin Mims Jr.':    { pos:'WR', recYds:420,  recTD:3,  rushYds:40,  rushTD:0, fumLost:0, role:'Bench',   note:'DEN — return specialist upside.' },
+  'Michael Pittman Jr.':{ pos:'WR', recYds:780,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'IND WR1. Anthony Richardson connection. Solid.' },
+  "Wan'Dale Robinson":  { pos:'WR', recYds:680,  recTD:5,  rushYds:40,  rushTD:0, fumLost:0, role:'Starter', note:'NYG WR1. Cam Ward connection. Emerging value.' },
+  'Nico Collins':       { pos:'WR', recYds:980,  recTD:6,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'HOU WR1. CJ Stroud connection. Top-10 STFFL WR.' },
+  'Jaxon Smith-Njigba': { pos:'WR', recYds:980,  recTD:6,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'SEA WR1. Breakout year. Top-12 STFFL WR.' },
+  'Jaylen Waddle':      { pos:'WR', recYds:820,  recTD:5,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'MIA — traded to DEN per reports. Bo Nix WR1 upside.' },
+  'Deebo Samuel Sr.':   { pos:'WR', recYds:620,  recTD:5,  rushYds:180, rushTD:2, fumLost:1, role:'Flex',    note:'WAS — dual-threat. Rush TDs boost STFFL value.' },
+  'Jayden Higgins':     { pos:'WR', recYds:480,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Flex',    note:'HOU — developing WR.' },
+  'Rashod Bateman':     { pos:'WR', recYds:320,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'BAL depth.' },
+  'Brian Thomas Jr.':   { pos:'WR', recYds:1020, recTD:7,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'JAC WR1. Breakout star. Top-10 STFFL WR.' },
+  'Ladd McConkey':      { pos:'WR', recYds:880,  recTD:5,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'LAC WR1. Herbert connection. Top-15 STFFL WR.' },
+  'Calvin Ridley':      { pos:'WR', recYds:780,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'TEN WR1. Cam Ward target. Year 3 contract expiry.' },
+  'Emeka Egbuka':       { pos:'WR', recYds:720,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'TB WR1. Baker Mayfield connection. Solid.' },
+  'Matthew Golden':     { pos:'WR', recYds:580,  recTD:4,  rushYds:0,   rushTD:0, fumLost:0, role:'Flex',    note:'GB — Jordan Love target. Emerging.' },
+  'Jordan Addison':     { pos:'WR', recYds:680,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'MIN WR2. Jefferson draws coverage = Addison opportunity.' },
+  'Jauan Jennings':     { pos:'WR', recYds:420,  recTD:4,  rushYds:20,  rushTD:0, fumLost:0, role:'Flex',    note:'SF — slot receiver, goal-line work.' },
+  'Terry McLaurin':     { pos:'WR', recYds:860,  recTD:6,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'WAS WR1. Daniels connection. Top-15 STFFL WR.' },
+  'Rashee Rice':        { pos:'WR', recYds:680,  recTD:5,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'KC — Fields at QB reduces ceiling vs Mahomes.' },
+  'Stefon Diggs':       { pos:'WR', recYds:520,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Flex',    note:'NE — Drake Maye target. Age concern.' },
+  'Troy Franklin':      { pos:'WR', recYds:280,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'DEN — depth.' },
+  'Emanuel Wilson':     { pos:'WR', recYds:120,  recTD:1,  rushYds:40,  rushTD:0, fumLost:0, role:'Bench',   note:'GB — depth.' },
+  'Efton Chism III':    { pos:'WR', recYds:120,  recTD:1,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'NE — depth.' },
+  'Keon Coleman':       { pos:'WR', recYds:680,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'BUF — Josh Allen red zone target. Solid STFFL floor.' },
+  'Adam Thielen':       { pos:'WR', recYds:320,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'MIN — aging, bench.' },
+  'Amon-Ra St. Brown':  { pos:'WR', recYds:1020, recTD:7,  rushYds:60,  rushTD:1, fumLost:0, role:'Starter', note:'DET WR1. Elite slot. Top-8 STFFL WR.' },
+  'Ricky Pearsall':     { pos:'WR', recYds:680,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'SF WR2. Purdy connection. Solid floor.' },
+  'Chris Olave':        { pos:'WR', recYds:780,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'NO WR1. Derek Carr successor QB connection.' },
+  'Rashid Shaheed':     { pos:'WR', recYds:320,  recTD:2,  rushYds:60,  rushTD:1, fumLost:0, role:'Bench',   note:'NO — return specialist.' },
+  'CeeDee Lamb':        { pos:'WR', recYds:1200, recTD:9,  rushYds:40,  rushTD:0, fumLost:0, role:'Starter', note:'DAL WR1. Elite. Top-3 STFFL WR.' },
+  'Tetairoa McMillan':  { pos:'WR', recYds:880,  recTD:7,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'CAR WR1. Bryce Young target. Top-15 STFFL WR.' },
+  'Christian Kirk':     { pos:'WR', recYds:380,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'HOU depth.' },
+  'DeMario Douglas':    { pos:'WR', recYds:420,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'NE slot. Bench.' },
+  "Dont'e Thornton Jr.":{ pos:'WR', recYds:280,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'LV — depth.' },
+  'Jakobi Meyers':      { pos:'WR', recYds:420,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'LV — reliable but limited upside.' },
+  "Ja'Marr Chase":      { pos:'WR', recYds:1250, recTD:9,  rushYds:20,  rushTD:0, fumLost:0, role:'Starter', note:'CIN WR1. Elite. Top-3 STFFL WR. Year 3 — hits FA.' },
+  'Malik Nabers':       { pos:'WR', recYds:1020, recTD:7,  rushYds:0,   rushTD:0, fumLost:1, role:'Starter', note:'NYG WR1. Dart connection. Top-10 STFFL WR.' },
+  'DeVonta Smith':      { pos:'WR', recYds:780,  recTD:6,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'PHI WR2. Hurts connection. Solid floor.' },
+  'Brandon Aiyuk':      { pos:'WR', recYds:620,  recTD:4,  rushYds:20,  rushTD:0, fumLost:0, role:'Flex',    note:'SF — injury concern.' },
+  'Tank Dell':          { pos:'WR', recYds:420,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'HOU — injury history.' },
+  'Mike Evans':         { pos:'WR', recYds:820,  recTD:6,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'SF — age 32, collarbone history. Purdy target. Monitor.' },
+  'Tyreek Hill':        { pos:'WR', recYds:920,  recTD:6,  rushYds:60,  rushTD:1, fumLost:0, role:'Starter', note:'MIA — Malik Willis at QB is catastrophic for Hill at 38.' },
+  'DJ Moore':           { pos:'WR', recYds:820,  recTD:5,  rushYds:40,  rushTD:0, fumLost:0, role:'Starter', note:'CHI WR1. Caleb Williams Year 2. Solid floor.' },
+  'Jayden Reed':        { pos:'WR', recYds:480,  recTD:3,  rushYds:40,  rushTD:0, fumLost:0, role:'Bench',   note:'GB — depth behind main targets.' },
+  'Josh Downs':         { pos:'WR', recYds:520,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Flex',    note:'IND — emerging slot. Richardson connection.' },
+  'Xavier Legette':     { pos:'WR', recYds:280,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'CAR depth.' },
+  'Jalen Coker':        { pos:'WR', recYds:280,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'CAR depth.' },
+  'Joshua Palmer':      { pos:'WR', recYds:280,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'BUF depth.' },
+  'Romeo Doubs':        { pos:'WR', recYds:420,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'GB — NE WR1 shot with Maye. 2026 auction target.' },
+  "Tre' Harris":        { pos:'WR', recYds:320,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'LAC depth.' },
+  'Michael Wilson':     { pos:'WR', recYds:180,  recTD:1,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'ARI depth.' },
+  'Amari Cooper':       { pos:'WR', recYds:420,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'LV — reliable but declining.' },
+  'Puka Nacua':         { pos:'WR', recYds:820,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'LAR WR1. Stafford connection. Reliable.' },
+  'Rome Odunze':        { pos:'WR', recYds:720,  recTD:5,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'CHI WR2. Williams Year 2 lifts ceiling.' },
+  'DK Metcalf':         { pos:'WR', recYds:880,  recTD:6,  rushYds:0,   rushTD:0, fumLost:1, role:'Starter', note:'PIT — new team. Arthur Smith deep threat. Solid.' },
+  'Marvin Harrison Jr.':{ pos:'WR', recYds:980,  recTD:7,  rushYds:0,   rushTD:0, fumLost:0, role:'Starter', note:'ARI WR1. Huge upside. Top-10 STFFL WR.' },
+  'Cedric Tillman':     { pos:'WR', recYds:320,  recTD:2,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'CLE depth.' },
+  'Cooper Kupp':        { pos:'WR', recYds:480,  recTD:3,  rushYds:20,  rushTD:0, fumLost:0, role:'Flex',    note:'SEA — injury history. Flex with risk.' },
+  'Chris Godwin Jr.':   { pos:'WR', recYds:380,  recTD:3,  rushYds:0,   rushTD:0, fumLost:0, role:'Bench',   note:'TB — injury return.' },
+  // ── TEs ──
+  'David Njoku':        { pos:'TE', recYds:720,  recTD:5,  role:'Starter', note:'CLE — left as FA. BAL visit = TE2 behind Andrews. Value uncertain.' },
+  'Dalton Kincaid':     { pos:'TE', recYds:420,  recTD:3,  role:'Flex',    note:'BUF TE — Josh Allen connection. Borderline starter.' },
+  'T.J. Hockenson':     { pos:'TE', recYds:480,  recTD:4,  role:'Starter', note:'MIN — ACL recovery. Monitor return timeline.' },
+  'Zach Ertz':          { pos:'TE', recYds:320,  recTD:2,  role:'Bench',   note:'WAS — aging. Bench.' },
+  'Brock Bowers':       { pos:'TE', recYds:1120, recTD:6,  role:'Starter', note:'LV TE1. Elite. Historic rookie. Top-3 STFFL TE.' },
+  'Darren Waller':      { pos:'TE', recYds:120,  recTD:1,  role:'Bench',   note:'MIA — injury history, bench.' },
+  'Mark Andrews':       { pos:'TE', recYds:820,  recTD:6,  role:'Starter', note:'BAL TE1. Lamar Jackson. Top-5 STFFL TE.' },
+  'Jake Ferguson':      { pos:'TE', recYds:480,  recTD:3,  role:'Flex',    note:'DAL TE1. Dak connection. Solid flex.' },
+  'Hunter Henry':       { pos:'TE', recYds:380,  recTD:3,  role:'Flex',    note:'NE — Maye connection. Emerging.' },
+  'Kyle Pitts Sr.':     { pos:'TE', recYds:520,  recTD:4,  role:'Flex',    note:'ATL — Tua bridge QB clouds 2026 ceiling.' },
+  'Travis Kelce':       { pos:'TE', recYds:680,  recTD:5,  role:'Starter', note:'KC TE1. Age 36 in 2026, Fields vs Mahomes huge risk.' },
+  'Mason Taylor':       { pos:'TE', recYds:280,  recTD:2,  role:'Bench',   note:'NYJ — backup TE.' },
+  'Trey McBride':       { pos:'TE', recYds:780,  recTD:5,  role:'Starter', note:'ARI TE1. Top-5 STFFL TE. Consistent.' },
+  'George Kittle':      { pos:'TE', recYds:780,  recTD:6,  role:'Starter', note:'SF TE1. Elite. Top-5 STFFL TE.' },
+  'Sam LaPorta':        { pos:'TE', recYds:620,  recTD:5,  role:'Starter', note:'DET TE1. Goff connection. Solid starter.' },
+  'Evan Engram':        { pos:'TE', recYds:480,  recTD:3,  role:'Flex',    note:'DEN — Bo Nix connection. Flex value.' },
+  'Cade Otton':         { pos:'TE', recYds:320,  recTD:2,  role:'Bench',   note:'TB — backup.' },
+  'Isaiah Likely':      { pos:'TE', recYds:280,  recTD:2,  role:'Bench',   note:'BAL TE2 behind Andrews.' },
+  'Jonnu Smith':        { pos:'TE', recYds:380,  recTD:3,  role:'Bench',   note:'PIT — solid blocking TE, limited targets.' },
+  'Tucker Kraft':       { pos:'TE', recYds:420,  recTD:3,  role:'Flex',    note:'GB — Love connection. Emerging.' },
+  'Tyler Warren':       { pos:'TE', recYds:680,  recTD:5,  role:'Starter', note:'IND — breakout rookie. Top-8 STFFL TE.' },
+  'Colston Loveland':   { pos:'TE', recYds:520,  recTD:4,  role:'Starter', note:'CHI — Caleb Williams connection. Emerging.' },
+  // ── Kickers (use estimated STFFL pts) ──
+  'Wil Lutz':           { pos:'K', kPts:128, role:'Starter', note:'DEN kicker. Good range. ~128 STFFL pts over full season.' },
+  'Evan McPherson':     { pos:'K', kPts:120, role:'Starter', note:'CHI kicker. Accurate. ~120 pts.' },
+  'Joshua Karty':       { pos:'K', kPts:110, role:'Bench',   note:'LAR — emerging. ~110 pts.' },
+  'Cameron Dicker':     { pos:'K', kPts:125, role:'Starter', note:'LAC — reliable. ~125 pts.' },
+  'Brandon Aubrey':     { pos:'K', kPts:138, role:'Starter', note:'DAL — elite accuracy + range. Best kicker in league.' },
+  "Ka'imi Fairbairn":   { pos:'K', kPts:122, role:'Starter', note:'HOU — consistent. ~122 pts.' },
+  'Tyler Bass':         { pos:'K', kPts:118, role:'Starter', note:'BUF — solid. ~118 pts.' },
+  'Jake Elliott':       { pos:'K', kPts:124, role:'Starter', note:'PHI — reliable. ~124 pts.' },
+  'Younghoe Koo':       { pos:'K', kPts:115, role:'Bench',   note:'ATL — decent. ~115 pts.' },
+  'Harrison Butker':    { pos:'K', kPts:130, role:'Starter', note:'KC — elite accuracy, good distance. ~130 pts.' },
+  'Jake Bates':         { pos:'K', kPts:140, role:'Starter', note:'DET — long-range monster. Highest ceiling kicker.' },
+  'Cairo Santos':       { pos:'K', kPts:108, role:'Bench',   note:'CHI — backup tier.' },
+  'Jason Myers':        { pos:'K', kPts:118, role:'Starter', note:'SEA — reliable. ~118 pts.' },
+  'Chase McLaughlin':   { pos:'K', kPts:115, role:'Bench',   note:'TB — solid. ~115 pts.' },
+  'Chris Boswell':      { pos:'K', kPts:128, role:'Starter', note:'PIT — accurate. ~128 pts.' },
+  'Matt Gay':           { pos:'K', kPts:120, role:'Starter', note:'WAS — reliable. ~120 pts.' },
+  'Tyler Loop':         { pos:'K', kPts:105, role:'Bench',   note:'BAL — limited sample.' },
+  'Nick Folk':          { pos:'K', kPts:110, role:'Bench',   note:'NYJ — aging.' },
+  'Cam Little':         { pos:'K', kPts:108, role:'Bench',   note:'JAC — developing.' },
+  'Brandon McManus':    { pos:'K', kPts:112, role:'Bench',   note:'GB — veteran.' },
+  // ── DSTs (avg PA + turnover/sack estimates for STFFL §6.3) ──
+  'San Francisco 49ers': { pos:'DST', sacks:45, dstINT:14, fumRec:8, dstTD:3, safety:1, blockKick:1, pa:18, role:'Starter', note:'SF elite defense. Strong sack rate. Good STFFL DST.' },
+  'Buffalo Bills':       { pos:'DST', sacks:42, dstINT:15, fumRec:9, dstTD:2, safety:0, blockKick:0, pa:20, role:'Starter', note:'BUF — elite offense keeps PA manageable.' },
+  'Detroit Lions':       { pos:'DST', sacks:38, dstINT:12, fumRec:7, dstTD:2, safety:0, blockKick:1, pa:22, role:'Starter', note:'DET — solid unit. Good run defense.' },
+  'Tampa Bay Buccaneers':{ pos:'DST', sacks:40, dstINT:14, fumRec:8, dstTD:3, safety:0, blockKick:0, pa:21, role:'Starter', note:'TB defense — Baker helps keep leads.' },
+  'Denver Broncos':      { pos:'DST', sacks:44, dstINT:16, fumRec:9, dstTD:2, safety:1, blockKick:1, pa:20, role:'Starter', note:'DEN defense — strong unit under Payton.' },
+  'Philadelphia Eagles': { pos:'DST', sacks:50, dstINT:18, fumRec:10,dstTD:4, safety:1, blockKick:2, pa:18, role:'Starter', note:'PHI — elite defense. Best STFFL DST in league.' },
+  'Kansas City Chiefs':  { pos:'DST', sacks:40, dstINT:14, fumRec:8, dstTD:2, safety:0, blockKick:0, pa:22, role:'Starter', note:'KC defense — consistent but not elite.' },
+  'New Orleans Saints':  { pos:'DST', sacks:36, dstINT:12, fumRec:7, dstTD:2, safety:0, blockKick:0, pa:24, role:'Bench',   note:'NO — rebuilding.' },
+  'New York Jets':       { pos:'DST', sacks:40, dstINT:13, fumRec:8, dstTD:2, safety:1, blockKick:0, pa:22, role:'Starter', note:'NYJ defense — strong even with bad offense.' },
+  'Green Bay Packers':   { pos:'DST', sacks:38, dstINT:13, fumRec:8, dstTD:2, safety:0, blockKick:1, pa:22, role:'Starter', note:'GB — solid, Love offense helps.' },
+  'Houston Texans':      { pos:'DST', sacks:38, dstINT:13, fumRec:8, dstTD:2, safety:0, blockKick:1, pa:21, role:'Starter', note:'HOU defense — young and ascending.' },
+  'Baltimore Ravens':    { pos:'DST', sacks:42, dstINT:15, fumRec:9, dstTD:3, safety:1, blockKick:1, pa:19, role:'Starter', note:'BAL — elite. Lamar offense keeps PA low.' },
+  'Minnesota Vikings':   { pos:'DST', sacks:38, dstINT:13, fumRec:7, dstTD:2, safety:0, blockKick:0, pa:22, role:'Starter', note:'MIN — solid unit.' },
+  'Los Angeles Rams':    { pos:'DST', sacks:36, dstINT:12, fumRec:7, dstTD:1, safety:0, blockKick:0, pa:24, role:'Bench',   note:'LAR — average unit.' },
+  'New England Patriots':{ pos:'DST', sacks:32, dstINT:11, fumRec:7, dstTD:1, safety:0, blockKick:0, pa:26, role:'Bench',   note:'NE — rebuilding.' },
+  'Arizona Cardinals':   { pos:'DST', sacks:34, dstINT:11, fumRec:6, dstTD:1, safety:0, blockKick:0, pa:25, role:'Bench',   note:'ARI — weak unit.' },
+  'Seattle Seahawks':    { pos:'DST', sacks:38, dstINT:14, fumRec:8, dstTD:2, safety:0, blockKick:1, pa:22, role:'Starter', note:'SEA — solid defensive unit.' },
+  'Chicago Bears':       { pos:'DST', sacks:36, dstINT:12, fumRec:7, dstTD:2, safety:0, blockKick:0, pa:24, role:'Bench',   note:'CHI — improving but still mid-tier.' },
+  'New York Giants':     { pos:'DST', sacks:34, dstINT:11, fumRec:7, dstTD:1, safety:0, blockKick:0, pa:26, role:'Bench',   note:'NYG — weak unit.' },
+  'Pittsburgh Steelers': { pos:'DST', sacks:44, dstINT:15, fumRec:9, dstTD:3, safety:1, blockKick:1, pa:20, role:'Starter', note:'PIT — elite defense. Great STFFL DST.' },
+  'Indianapolis Colts':  { pos:'DST', sacks:34, dstINT:11, fumRec:6, dstTD:1, safety:0, blockKick:0, pa:25, role:'Bench',   note:'IND — below average.' },
+};
+
+// ── ALL 12 ROSTERS (from spreadsheet) ──────────
+const SP_ROSTERS = {
+  'ADAM':            [['QB','C.J. Stroud','HOU',5],['QB','Kyler Murray','ARI',8],['QB','Michael Penix Jr.','ATL',3],['RB','Braelon Allen','NYJ',2],['RB','James Cook','BUF',40],['RB','Breece Hall','NYJ',19],['RB','Tyrone Tracy Jr.','NYG',13],['RB','Jordan Mason','MIN',10],['RB','Justice Hill','BAL',1],['WR','Drake London','ATL',34],['WR','Xavier Worthy','KC',18],['WR','Travis Hunter','JAC',10],['WR','Jerry Jeudy','CLE',12],['WR','Keenan Allen','LAC',3],['WR','Isaac TeSlaa','DET',2],['TE','David Njoku','CLE',6],['TE','Dalton Kincaid','BUF',5],['K','Wil Lutz','DEN',3],['DST','San Francisco 49ers','SF',3],['DST','Buffalo Bills','BUF',3]],
+  'BEN':             [['QB','Joe Burrow','CIN',15],['QB','J.J. McCarthy','MIN',3],['RB','Chase Brown','CIN',4],['RB','Travis Etienne Jr.','JAC',8],['RB','Jaylen Warren','PIT',6],['RB','Austin Ekeler','WAS',6],['RB','Najee Harris','LAC',5],['RB','Joe Mixon','HOU',5],['RB','Tahj Brooks','CIN',1],['WR','Tee Higgins','CIN',31],['WR','Justin Jefferson','MIN',46],['WR','Davante Adams','LAR',24],['WR','A.J. Brown','PHI',34],['TE','Dallas Goedert','PHI',3],['TE','Chig Okonkwo','TEN',1],['TE','Mike Gesicki','CIN',3],['K','Evan McPherson','CHI',1],['K','Joshua Karty','LAR',1],['DST','Detroit Lions','DET',2],['DST','Tampa Bay Buccaneers','TB',1]],
+  'DARREN':          [['QB','Patrick Mahomes II','KC',9],['QB','Brock Purdy','SF',6],['QB','Matthew Stafford','LAR',3],['RB','James Conner','ARI',33],["RB","D'Andre Swift",'CHI',25],['RB','Tony Pollard','TEN',26],['RB','Nick Chubb','HOU',8],['RB','Trey Benson','ARI',8],['RB','Jaydon Blue','DAL',5],['RB','Roschon Johnson','CHI',2],['WR','Garrett Wilson','NYJ',15],['WR','Courtland Sutton','DEN',19],['WR','Khalil Shakir','BUF',4],['WR','Darnell Mooney','ATL',1],['TE','Tyler Warren','IND',10],['TE','Colston Loveland','CHI',8],['K','Cameron Dicker','LAC',3],['K','Brandon Aubrey','DAL',5],['DST','Denver Broncos','DEN',2],['DST','Philadelphia Eagles','PHI',8]],
+  'DARYL & MICHAEL': [['QB','Baker Mayfield','TB',2],['QB','Sam Darnold','SEA',1],["RB","De'Von Achane",'MIA',11],['RB','Derrick Henry','BAL',58],['RB','Josh Jacobs','GB',53],['RB','Quinshon Judkins','CLE',5],['RB','Jaylen Wright','MIA',1],['RB','Raheem Mostert','LV',1],['WR','Zay Flowers','BAL',12],['WR','George Pickens','DAL',16],['WR','Jameson Williams','DET',14],['WR','Marvin Mims Jr.','DEN',4],['WR','Michael Pittman Jr.','IND',4],["WR","Wan'Dale Robinson",'NYG',1],['TE','T.J. Hockenson','MIN',10],['TE','Zach Ertz','WAS',1],['K','Chase McLaughlin','TB',2],['K','Chris Boswell','PIT',2],['DST','Kansas City Chiefs','KC',1],['DST','New Orleans Saints','NO',1]],
+  'DAVE & SIMON':    [['QB','Justin Herbert','LAC',5],['QB','Tua Tagovailoa','MIA',1],['QB','Geno Smith','LV',1],['RB','Ashton Jeanty','LV',52],['RB','Jahmyr Gibbs','DET',58],['RB','Aaron Jones Sr.','MIN',14],['RB','Will Shipley','PHI',2],['RB','Keaton Mitchell','BAL',1],['WR','Nico Collins','HOU',4],['WR','Jaxon Smith-Njigba','SEA',11],['WR','Jaylen Waddle','MIA',13],['WR','Deebo Samuel Sr.','WAS',9],['WR','Jayden Higgins','HOU',3],['WR','Rashod Bateman','BAL',1],['TE','Brock Bowers','LV',15],['TE','Darren Waller','MIA',1],['K','Matt Gay','WAS',2],['K','Tyler Loop','BAL',1],['DST','New York Jets','NYJ',2],['DST','Green Bay Packers','GB',1]],
+  'HANLEY':          [['QB','Jayden Daniels','WAS',24],['QB','Cam Ward','TEN',4],['QB','Drake Maye','NE',3],['RB','Bucky Irving','TB',11],['RB','RJ Harvey','DEN',22],['RB','Kaleb Johnson','PIT',17],['RB','Bhayshul Tuten','JAC',6],['RB','Brian Robinson Jr.','SF',5],['WR','Brian Thomas Jr.','JAC',13],['WR','Ladd McConkey','LAC',10],['WR','Calvin Ridley','TEN',19],['WR','Emeka Egbuka','TB',16],['WR','Matthew Golden','GB',16],['WR','Jordan Addison','MIN',4],['TE','Mark Andrews','BAL',9],['TE','Jake Ferguson','DAL',3],["K","Ka'imi Fairbairn",'HOU',2],['K','Tyler Bass','BUF',3],['DST','Houston Texans','HOU',7],['DST','Baltimore Ravens','BAL',5]],
+  'JOSH M.':         [['QB','Jordan Love','GB',4],['QB','Lamar Jackson','BAL',27],['RB','Christian McCaffrey','SF',47],['RB','Jonathan Taylor','IND',45],['RB','Kendre Miller','NO',1],['RB','Trevor Etienne','CAR',1],['RB','Chris Rodriguez Jr.','WAS',1],['WR','Jauan Jennings','SF',2],['WR','Terry McLaurin','WAS',26],['WR','Rashee Rice','KC',9],['WR','Stefon Diggs','NE',11],['WR','Troy Franklin','DEN',1],['WR','Emanuel Wilson','GB',1],['WR','Efton Chism III','NE',1],['TE','Hunter Henry','NE',4],['TE','Kyle Pitts Sr.','ATL',7],['K','Jake Elliott','PHI',3],['K','Younghoe Koo','ATL',1],['DST','Minnesota Vikings','MIN',6],['DST','Los Angeles Rams','LAR',1]],
+  'JOSH T.':         [['QB','Bo Nix','DEN',9],['QB','Justin Fields','NYJ',4],['RB','Javonte Williams','DAL',26],['RB','Alvin Kamara','NO',21],['RB','TreVeyon Henderson','NE',31],['RB','J.K. Dobbins','DEN',11],['RB','Rhamondre Stevenson','NE',5],['RB','Kyle Monangai','CHI',1],['RB','Tyjae Spears','TEN',1],['WR','Keon Coleman','BUF',11],['WR','Adam Thielen','MIN',2],['WR','Amon-Ra St. Brown','DET',42],['WR','Ricky Pearsall','SF',11],['WR','Chris Olave','NO',6],['WR','Rashid Shaheed','NO',2],['TE','Travis Kelce','KC',8],['TE','Mason Taylor','NYJ',2],['K','Harrison Butker','KC',2],['DST','New England Patriots','NE',3],['DST','Arizona Cardinals','ARI',1]],
+  'RICK':            [['QB','Jalen Hurts','PHI',23],['QB','Trevor Lawrence','JAC',3],['RB','Kyren Williams','LAR',4],['RB','Chuba Hubbard','CAR',17],['RB','Kenneth Walker III','SEA',23],['RB','Zach Charbonnet','SEA',9],['RB','Jacory Croskey-Merritt','WAS',19],['RB','Woody Marks','HOU',2],['RB','Dylan Sampson','CLE',4],['RB','Blake Corum','LAR',1],['RB','Rico Dowdle','CAR',1],['WR','CeeDee Lamb','DAL',50],['WR','Tetairoa McMillan','CAR',20],['WR','Christian Kirk','HOU',1],['WR','DeMario Douglas','NE',2],["WR","Dont'e Thornton Jr.",'LV',2],['TE','Trey McBride','ARI',4],['K','Jake Bates','DET',4],['K','Cairo Santos','CHI',1],['DST','Seattle Seahawks','SEA',3]],
+  'SADIQ':           [['QB','Dak Prescott','DAL',7],['QB','Bryce Young','CAR',2],['RB','Jerome Ford','CLE',4],['RB','Tank Bigsby','JAC',4],['RB','Omarion Hampton','LAC',38],['RB','David Montgomery','DET',19],['RB','Kareem Hunt','KC',1],['WR','Jakobi Meyers','LV',4],["WR","Ja'Marr Chase",'CIN',58],['WR','Malik Nabers','NYG',37],['WR','DeVonta Smith','PHI',9],['WR','Brandon Aiyuk','SF',1],['WR','Tank Dell','HOU',1],['TE','Evan Engram','DEN',4],['TE','Cade Otton','TB',1],['TE','Isaiah Likely','BAL',1],['K','Cam Little','JAC',1],['K','Brandon McManus','GB',1],['DST','Pittsburgh Steelers','PIT',6],['DST','Indianapolis Colts','IND',1]],
+  'SIMON H.':        [['QB','Josh Allen','BUF',27],['RB','Saquon Barkley','PHI',57],['RB','Dameon Pierce','HOU',1],['RB','Marquise Brown','KC',1],['WR','Mike Evans','TB',26],['WR','Tyreek Hill','MIA',28],['WR','DJ Moore','CHI',10],['WR','Jayden Reed','GB',1],['WR','Josh Downs','IND',1],['WR','Xavier Legette','CAR',1],['WR','Jalen Coker','CAR',1],['WR','Joshua Palmer','BUF',1],['WR','Romeo Doubs','GB',1],["WR","Tre' Harris",'LAC',1],['WR','Michael Wilson','ARI',1],['WR','Amari Cooper','LV',1],['TE','Sam LaPorta','DET',8],['TE','George Kittle','SF',18],['K','Nick Folk','NYJ',1],['DST','Chicago Bears','CHI',1]],
+  'TED':             [['QB','Caleb Williams','CHI',6],['QB','Jared Goff','DET',4],['RB','Bijan Robinson','ATL',62],['RB','Isiah Pacheco','KC',20],['RB','Cam Skattebo','NYG',7],['RB','Tyler Allgeier','ATL',6],['RB','Rachaad White','TB',4],['RB','Ray Davis','BUF',2],['RB','Ollie Gordon II','MIA',5],['WR','Puka Nacua','LAR',4],['WR','Rome Odunze','CHI',13],['WR','DK Metcalf','PIT',23],['WR','Marvin Harrison Jr.','ARI',21],['WR','Cedric Tillman','CLE',4],['WR','Cooper Kupp','SEA',6],['WR','Chris Godwin Jr.','TB',4],['TE','Jonnu Smith','PIT',2],['TE','Tucker Kraft','GB',5],['K','Jason Myers','SEA',1],['DST','New York Giants','NYG',1]],
+};
+
+// ── TEAM DISPLAY LABELS ──────────────────────
+const SP_TEAM_LABELS = {
+  'ADAM':'Adam & Matt','BEN':'Ben','DARREN':'Darren','DARYL & MICHAEL':'Daryl & Michael',
+  'DAVE & SIMON':'Dave & Simon','HANLEY':'Hanley','JOSH M.':'Josh M.','JOSH T.':'Josh T.',
+  'RICK':'Rick','SADIQ':'Sadiq','SIMON H.':'Simon H.','TED':'Ted'
+};
+
+// Best-XI starters per team for projected total (1QB 2RB 2WR 1TE 2FLEX 1K 1DST)
+function spBestXI(teamKey) {
+  const raw = SP_ROSTERS[teamKey] || [];
+  const players = raw.map(([pos, name, nfl, sal]) => {
+    const stats = PLAYER_STATS[name] || { pos, kPts:0 };
+    const pts = stfflPts({ ...stats, pos });
+    return { pos, name, nfl, sal, pts };
+  });
+
+  const byPos = { QB:[], RB:[], WR:[], TE:[], K:[], DST:[] };
+  players.forEach(p => { if (byPos[p.pos]) byPos[p.pos].push(p); });
+  Object.values(byPos).forEach(arr => arr.sort((a,b) => b.pts - a.pts));
+
+  const starters = [];
+  const used = new Set();
+
+  const pick = (pos, n) => {
+    byPos[pos].filter(p => !used.has(p.name)).slice(0, n).forEach(p => { starters.push(p); used.add(p.name); });
+  };
+
+  pick('QB',1); pick('RB',2); pick('WR',2); pick('TE',1); pick('K',1); pick('DST',1);
+
+  // 2 FLEX: best remaining RB/WR/TE
+  const flexPool = [...byPos.RB, ...byPos.WR, ...byPos.TE]
+    .filter(p => !used.has(p.name))
+    .sort((a,b) => b.pts - a.pts);
+  flexPool.slice(0,2).forEach(p => { starters.push(p); used.add(p.name); });
+
+  return starters.reduce((s, p) => s + p.pts, 0);
+}
+
+// Per-player projected pts table
+function spPlayerRows(teamKey) {
+  const raw = SP_ROSTERS[teamKey] || [];
+  return raw.map(([pos, name, nfl, sal]) => {
+    const stats = PLAYER_STATS[name] || { pos, kPts:0 };
+    const pts = stfflPts({ ...stats, pos });
+    const eff = sal > 0 ? (pts / sal).toFixed(1) : '—';
+    const role = stats.role || '—';
+    const note = stats.note || '';
+    return { pos, name, nfl, sal, pts, eff: parseFloat(eff)||0, role, note };
+  });
+}
+
+// ── STATE ──────────────────────────────────────
+let spCurrentTeam = 'ADAM';
+let spSort = 'pts';
+let spPos  = 'all';
+let spColSortDir = {};
+let spSelectedPlayer = null;
+
+function spSetTeam(t) { spCurrentTeam = t; spSelectedPlayer = null; spRenderAll(); }
+function spSetSort(s, btn) {
+  spSort = s;
+  document.querySelectorAll('#sp-sort-pts,#sp-sort-eff,#sp-sort-sal,#sp-sort-pos').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  spRenderTable();
+}
+function spSetPos(p, btn) {
+  spPos = p;
+  document.querySelectorAll('.sp-controls .filter-btn').forEach(b => {
+    if (['All','QB','RB','WR','TE','K','DST'].some(x => b.textContent.trim() === x)) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  spRenderTable();
+}
+function spColSort(th) {
+  const key = th.dataset.sort;
+  spColSortDir[key] = spColSortDir[key] === 'asc' ? 'desc' : 'asc';
+  spSort = key;
+  document.querySelectorAll('.proj-table th').forEach(t => { t.classList.remove('sort-asc','sort-desc'); });
+  th.classList.add(spColSortDir[key] === 'asc' ? 'sort-asc' : 'sort-desc');
+  spRenderTable();
+}
+
+// ── RENDER FUNCTIONS ───────────────────────────
+function spRenderAll() {
+  spRenderStats();
+  spRenderLeagueBars();
+  spRenderTable();
+}
+
+function spRenderStats() {
+  const rows = spPlayerRows(spCurrentTeam);
+  const starters = rows.filter(p => p.role === 'Starter');
+  const totalPts = spBestXI(spCurrentTeam);
+  const capSpent = rows.reduce((s,p) => s + p.sal, 0);
+  const topPlayer = rows.sort((a,b) => b.pts - a.pts)[0];
+  const avgEff = rows.length ? (rows.reduce((s,p) => s + p.eff, 0) / rows.length).toFixed(1) : '—';
+
+  document.getElementById('sp-stat-row').innerHTML = `
+    <div class="sp-stat"><div class="v val-green">${Math.round(totalPts)}</div><div class="l">Best-XI Projected</div></div>
+    <div class="sp-stat"><div class="v val-gold">$${capSpent}</div><div class="l">Cap Invested</div></div>
+    <div class="sp-stat"><div class="v val-blue">${avgEff}</div><div class="l">Avg Pts/$</div></div>
+    <div class="sp-stat"><div class="v" style="font-size:13px;font-weight:700;color:var(--text);">${topPlayer ? topPlayer.name.split(' ').pop() : '—'}</div><div class="l">Top Scorer</div></div>
+  `;
+  document.getElementById('sp-table-title').textContent = `${SP_TEAM_LABELS[spCurrentTeam]} — Player Projections`;
+}
+
+function spRenderLeagueBars() {
+  const scores = Object.keys(SP_ROSTERS).map(k => ({ key: k, label: SP_TEAM_LABELS[k], pts: spBestXI(k) }));
+  scores.sort((a,b) => b.pts - a.pts);
+  const max = scores[0].pts;
+  const myPts = scores.find(s => s.key === 'ADAM').pts;
+
+  let html = '';
+  scores.forEach((s, i) => {
+    const isUs = s.key === 'ADAM';
+    const pct = (s.pts / max * 100).toFixed(1);
+    const diff = s.key === 'ADAM' ? '' : (s.pts > myPts ? `+${Math.round(s.pts-myPts)}` : `-${Math.round(myPts-s.pts)}`);
+    const diffColor = s.pts > myPts ? 'var(--green)' : s.pts < myPts ? 'var(--red)' : 'var(--muted)';
+    const barColor = isUs ? 'var(--accent)' : i===0 ? 'var(--gold)' : `hsl(${220 - i*12},70%,55%)`;
+    const rankColor = i===0 ? 'var(--gold)' : i===1 ? '#94a3b8' : i===2 ? '#cd7f32' : 'var(--muted)';
+    html += `
+      <div class="league-bar-row${isUs?' is-us':''}" onclick="spSelectTeamBar('${s.key}')">
+        <div class="lb-rank" style="color:${rankColor}">${i+1}</div>
+        <div class="lb-name" style="${isUs?'color:var(--accent);font-weight:800;':''}">${isUs?'⭐ ':''} ${s.label}</div>
+        <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%;background:${barColor};"></div></div>
+        <div class="lb-pts" style="color:${barColor}">${Math.round(s.pts)}</div>
+        <div class="lb-diff" style="color:${diffColor}">${diff}</div>
+      </div>`;
+  });
+  document.getElementById('sp-league-bars').innerHTML = html;
+}
+
+function spSelectTeamBar(key) {
+  spCurrentTeam = key;
+  document.getElementById('sp-team-select').value = key;
+  spRenderStats();
+  spRenderTable();
+}
+
+function spRenderTable() {
+  const startOnly = document.getElementById('sp-starters-only').checked;
+  let rows = spPlayerRows(spCurrentTeam);
+
+  if (spPos !== 'all') rows = rows.filter(r => r.pos === spPos);
+  if (startOnly) rows = rows.filter(r => r.role === 'Starter');
+
+  const dir = spColSortDir[spSort] === 'asc' ? 1 : -1;
+  rows.sort((a,b) => {
+    if (spSort === 'pos')  return dir * a.pos.localeCompare(b.pos);
+    if (spSort === 'name') return dir * a.name.localeCompare(b.name);
+    if (spSort === 'sal')  return dir * (b.sal - a.sal);
+    if (spSort === 'eff')  return dir * (b.eff - a.eff);
+    return dir * (b.pts - a.pts); // default: pts
+  });
+
+  const maxEff = Math.max(...rows.map(r => r.eff), 1);
+  const maxPts = Math.max(...rows.map(r => r.pts), 1);
+
+  const POS_ORDER = { QB:0, RB:1, WR:2, TE:3, K:4, DST:5 };
+  if (spSort === 'pos') rows.sort((a,b) => dir * ((POS_ORDER[a.pos]||9) - (POS_ORDER[b.pos]||9)));
+
+  const isUs = spCurrentTeam === 'ADAM';
+
+  const tbody = document.getElementById('sp-proj-tbody');
+  tbody.innerHTML = rows.map(r => {
+    const effWidth = Math.round((r.eff / maxEff) * 80);
+    const ptsColor = r.pts >= maxPts*0.8 ? 'var(--green)' : r.pts >= maxPts*0.5 ? 'var(--yellow)' : 'var(--muted)';
+    const roleColor = r.role==='Starter'?'var(--green)':r.role==='Flex'?'var(--yellow)':'var(--muted)';
+    const sel = spSelectedPlayer === r.name ? ' selected' : '';
+    return `<tr class="${isUs?'is-us':''}${sel}" onclick="spSelectPlayer(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+      <td><span class="pos-badge pos-${r.pos}">${r.pos}</span></td>
+      <td style="font-weight:600;">${r.name}</td>
+      <td style="color:var(--muted);font-size:11px;">${r.nfl}</td>
+      <td style="font-weight:700;">$${r.sal}</td>
+      <td style="font-weight:800;color:${ptsColor};">${Math.round(r.pts)}</td>
+      <td style="font-weight:700;color:var(--accent);">${r.eff||'—'}</td>
+      <td><span class="eff-bar" style="width:${effWidth}px;background:${ptsColor};opacity:0.7;"></span></td>
+      <td style="font-size:11px;color:${roleColor};">${r.role}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── AI ANALYSIS (Claude API) ───────────────────
+async function spSelectPlayer(r) {
+  spSelectedPlayer = r.name;
+  spRenderTable(); // re-highlight
+
+  const panel = document.getElementById('sp-ai-panel');
+  panel.innerHTML = `<div class="ai-loading"><div class="ai-spinner"></div><div>Asking Claude about ${r.name}...</div></div>`;
+
+  const SYSTEM = `You are an expert STFFL fantasy football analyst. STFFL uses these scoring rules that differ from ESPN:
+- Passing TDs = 3 pts (NOT 6). This significantly reduces pocket passer value.
+- Rushing TDs = 6 pts, Receiving TDs = 6 pts.
+- Yardage: 0.5 per 10 passing yards, 0.5 per 5 rushing yards, 0.5 per 5 receiving yards.
+- NO partial points (§6.5): must hit full 5-yard or 10-yard increment. A player with 9 rushing yards scores 0 pts from yards.
+- Return TDs (KR/PR) = 6 pts credited to the individual player.
+- INT = -2, Fumble Lost = -2.
+- DST PA scoring: 0 PA = +10, 1-6 = +6, 7-13 = +3, 14-17 = 0, 18-21 = -3, 22-27 = -6, 28-34 = -9, 35+ = -12.
+- Max 2 keepers per team, 3-season max, escalating salary tiers per §5.4.
+- League is 12 teams, 20-player rosters, auction draft with $200 cap.
+Be concise. Format your response in exactly this structure:
+**2026 OUTLOOK** (2-3 sentences on what to expect from this player in 2026)
+**STFFL SCORING IMPACT** (1-2 sentences on how this player specifically fits the STFFL scoring system)
+**KEEPER/AUCTION VALUE** (1 sentence on whether to keep or target at auction and at what price)
+**RISK FACTORS** (1-2 bullet points of key risks)`;
+
+  const USER = `Analyze ${r.name} (${r.pos}, ${r.nfl}) for the 2026 STFFL season.
+Their 2025 salary was $${r.sal}. Projected STFFL pts (based on 2025 stats): ${Math.round(r.pts)}.
+Points per dollar efficiency: ${r.eff}.
+Role: ${r.role}.
+Context: ${r.note}
+Current offseason situation as of March 2026: this is the 2026 offseason. Key NFL moves include Mahomes ACL (KC), Justin Fields now at KC, Josh Allen 6yr $330M extension (BUF), Njoku left CLE as FA visiting BAL, Penix Jr ACL injury (ATL), Tua signed ATL as bridge QB.
+Give a sharp, practical STFFL fantasy analysis.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM,
+        messages: [{ role: 'user', content: USER }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'No response received.';
+
+    // Format the markdown-style response
+    const formatted = text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n- /g, '<br>• ')
+      .replace(/\n\n/g, '</p><p style="margin-top:10px;">')
+      .replace(/\n/g, '<br>');
+
+    panel.innerHTML = `
+      <div style="margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+        <div style="font-size:16px;font-weight:800;">${r.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${r.pos} · ${r.nfl} · $${r.sal} 2025 salary · <span style="color:var(--green);font-weight:700;">${Math.round(r.pts)} projected pts</span></div>
+      </div>
+      <div class="ai-content"><p>${formatted}</p></div>
+      <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);">
+        Generated by Claude Sonnet · STFFL §6.2/6.3 scoring rules applied · March 2026 offseason context
+      </div>`;
+  } catch(e) {
+    panel.innerHTML = `<div style="padding:16px;color:var(--red);font-size:13px;">⚠ AI analysis unavailable. Check your connection and try again.<br><br><small style="color:var(--muted);">${e.message}</small></div>`;
+  }
+}
+
+// ── INIT ───────────────────────────────────────
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+kcApplyCombo('James Cook', 'David Njoku');
+rtInitTeamSelector();
+rtRenderAll();
+document.getElementById('tab-scoring').addEventListener('click', () => {}, { once: false });
+// Lazy init scoring tab on first view
+(function() {
+  let spInited = false;
+  const origSwitch = switchTab;
+  window.switchTab = function(name, btn) {
+    origSwitch(name, btn);
+    if (name === 'scoring' && !spInited) { spInited = true; spRenderAll(); }
+  };
+})();
+</script>
+</body>
+</html>
